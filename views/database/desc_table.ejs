@@ -1,0 +1,48 @@
+﻿<% include ../include/header %>
+
+<!-- Begin page content -->
+<div class="container">
+    <div class="page-header">
+        <h1>
+            <a href="/database/show_databases">Databases</a>
+            /
+            <a href="/database/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+            /
+            <a href="/database/desc_table?database=<%= req.query.database %>&amp;table=<%= req.query.table %>"><%= req.query.table %></a>
+        </h1>
+    </div>
+
+    <p>
+        <a href="/database/select_limit?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;offset=0&amp;row_count=10">SELECT LIMIT</a>
+    </p>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Select</th>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Null</th>
+            <th>Key</th>
+            <th>Default</th>
+            <th>Extra</th>
+        </tr>
+        <% for (var i = 0; i < rows.length; ++i) { %>
+          <tr>
+              <td>
+                  <% if (i == 0 || ['PRI', 'UNI'].indexOf(rows[i].Key) > -1) { %>
+                    <a href="/database/select_form?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;key=<%= rows[i].Field %>">SELECT WHERE</a>
+                  <% } %>
+              </td>
+              <td><%= rows[i].Field %></td>
+              <td><%= rows[i].Type %></td>
+              <td><%= rows[i].Null %></td>
+              <td><%= rows[i].Key %></td>
+              <td><%= rows[i].Default %></td>
+              <td><%= rows[i].Extra %></td>
+          </tr>
+        <% } %>
+    </table>
+
+</div>
+
+<% include ../include/footer %>

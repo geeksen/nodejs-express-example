@@ -1,0 +1,26 @@
+﻿<% include ../include/header %>
+
+<!-- Begin page content -->
+<div class="container">
+    <div class="page-header">
+        <h1>
+            <a href="/database/show_databases">Databases</a>
+            /
+            <a href="/database/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        </h1>
+    </div>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Tables in <%= req.query.database %></th>
+        </tr>
+        <% for (var i = 0; i < rows.length; ++i) { %>
+          <tr>
+              <td><a href="/database/desc_table?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
+          </tr>
+        <% } %>
+    </table>
+
+</div>
+
+<% include ../include/footer %>

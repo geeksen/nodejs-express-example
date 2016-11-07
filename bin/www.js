@@ -17,16 +17,16 @@ var port = cfg.server.port // normalizePort(process.env.PORT || '3000')
 app.set('port', port)
 
 var mysql = require('mysql')
-var db_000 = mysql.createPool(cfg.db_000)
-var db_001 = mysql.createPool(cfg.db_001)
-app.set('db_000', db_000)
-app.set('db_001', db_001)
+var db000 = mysql.createPool(cfg.db000)
+var db001 = mysql.createPool(cfg.db001)
+app.set('db_000', db000)
+app.set('db_001', db001)
 
 var redis = require('redis')
-var rd_000 = redis.createClient(cfg.rd_000.port, cfg.rd_000.host)
-var rd_001 = redis.createClient(cfg.rd_001.port, cfg.rd_001.host)
-app.set('rd_000', rd_000)
-app.set('rd_001', rd_001)
+var rd000 = redis.createClient(cfg.rd000.port, cfg.rd000.host)
+var rd001 = redis.createClient(cfg.rd001.port, cfg.rd001.host)
+app.set('rd000', rd000)
+app.set('rd001', rd001)
 
 /**
  * Create HTTP server.
@@ -105,22 +105,19 @@ function onListening () {
 }
 
 function gracefulShutdown () {
-  db_000.end(function (err) {
-  })
+  db000.end()
+  db001.end()
 
-  db_001.end(function (err) {
-  })
+  rd000.quit()
+  rd001.quit()
 
-  rd_000.quit()
-  rd_001.quit()
-  
   server.close(function () {
     process.exit()
-  });
+  })
 
   setTimeout(function () {
     process.exit()
-  }, 10 * 1000);
+  }, 10 * 1000)
 }
 
 process.on('SIGTERM', gracefulShutdown) // kill -15

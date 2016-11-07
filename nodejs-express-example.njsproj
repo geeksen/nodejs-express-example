@@ -305,9 +305,6 @@
     <Content Include="views\include\header.ejs" />
     <Content Include="views\index.ejs" />
     <Content Include="views\message.ejs" />
-    <Content Include="views\sqlite3\select_limit.ejs" />
-    <Content Include="views\sqlite3\select_where.ejs" />
-    <Content Include="views\sqlite3\show_tables.ejs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

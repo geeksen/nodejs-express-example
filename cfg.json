@@ -1,0 +1,28 @@
+{
+	"db_000": {
+		"connectionLimit" : 5,
+		"host": "localhost",
+		"user": "root",
+		"password": "123456",
+		"database": "develop_waspp_000"
+	},
+	"db_001": {
+		"connectionLimit" : 5,
+		"host": "localhost",
+		"user": "root",
+		"password": "123456",
+		"database": "develop_waspp_001"
+	},
+	"rd_000": {
+		"host": "localhost",
+		"port": 6379
+	},
+	"rd_001": {
+		"host": "localhost",
+		"port": 6379
+	},
+	"server": {
+		"port": 3000
+	},
+	"//end": 0
+}

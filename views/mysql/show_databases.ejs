@@ -4,7 +4,7 @@
 <div class="container">
     <div class="page-header">
         <h1>
-            <a href="/database/show_databases">Databases</a>
+            <a href="/mysql/show_databases">Databases</a>
         </h1>
     </div>
 
@@ -14,7 +14,7 @@
         </tr>
         <% for (var i = 0; i < rows.length; ++i) { %>
           <tr>
-              <td><a href="/database/show_tables?database=<%= rows[i].Database %>"><%= rows[i].Database %></a></td>
+              <td><a href="/mysql/show_tables?database=<%= rows[i].Database %>"><%= rows[i].Database %></a></td>
           </tr>
         <% } %>
     </table>

@@ -9,7 +9,7 @@ router.get('/show_databases', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db').getConnection(next)
+      return req.app.get('db_000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -17,7 +17,7 @@ router.get('/show_databases', function (req, res, next) {
     },
     function (rows, fields, next) {
       db.release()
-      return res.render('database/show_databases', { req: req, rows: rows })
+      return res.render('mysql/show_databases', { req: req, rows: rows })
     }
   ],
     function (err) {
@@ -34,7 +34,7 @@ router.get('/show_tables', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db').getConnection(next)
+      return req.app.get('db_000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -42,7 +42,7 @@ router.get('/show_tables', function (req, res, next) {
     },
     function (rows, fields, next) {
       db.release()
-      return res.render('database/show_tables', { req: req, rows: rows })
+      return res.render('mysql/show_tables', { req: req, rows: rows })
     }
   ],
     function (err) {
@@ -59,7 +59,7 @@ router.get('/desc_table', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db').getConnection(next)
+      return req.app.get('db_000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -67,7 +67,7 @@ router.get('/desc_table', function (req, res, next) {
     },
     function (rows, fields, next) {
       db.release()
-      return res.render('database/desc_table', { req: req, rows: rows })
+      return res.render('mysql/desc_table', { req: req, rows: rows })
     }
   ],
     function (err) {
@@ -86,7 +86,7 @@ router.get('/select_limit', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db').getConnection(next)
+      return req.app.get('db_000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -108,7 +108,7 @@ router.get('/select_limit', function (req, res, next) {
 
     function (rows, fields, next) {
       db.release()
-      return res.render('database/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
+      return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
     }
   ],
     function (err) {
@@ -121,7 +121,7 @@ router.get('/select_limit', function (req, res, next) {
 })
 
 router.get('/select_form', function (req, res, next) {
-  res.render('database/select_form', { req: req })
+  res.render('mysql/select_form', { req: req })
 })
 
 router.get('/select_where', function (req, res, next) {
@@ -131,7 +131,7 @@ router.get('/select_where', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db').getConnection(next)
+      return req.app.get('db_000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -154,7 +154,7 @@ router.get('/select_where', function (req, res, next) {
         return res.render('message', { message: 'not found' })
       }
 
-      return res.render('database/select_where', { req: req, columns: columns, keys: keys, rows: rows })
+      return res.render('mysql/select_where', { req: req, columns: columns, keys: keys, rows: rows })
     }
   ],
     function (err) {

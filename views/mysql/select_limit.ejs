@@ -4,11 +4,11 @@
 <div class="container">
     <div class="page-header">
         <h1>
-            <a href="/database/show_databases">Databases</a>
+            <a href="/mysql/show_databases">Databases</a>
             /
-            <a href="/database/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+            <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
             /
-            <a href="/database/desc_table?database=<%= req.query.database %>&amp;table=<%= req.query.table %>"><%= req.query.table %></a>
+            <a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= req.query.table %>"><%= req.query.table %></a>
         </h1>
     </div>
 
@@ -23,7 +23,7 @@
           <tr>
               <% for (var j = 0; j < columns.length; ++j) { %>
                 <td><% if (keys.indexOf(columns[j]) > -1 ) { %>
-                        <a href="/database/select_where?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;key=<%= columns[j] %>&amp;value=<%= rows[i][columns[j]] %>"><%= rows[i][columns[j]] %></a>
+                        <a href="/mysql/select_where?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;key=<%= columns[j] %>&amp;value=<%= rows[i][columns[j]] %>"><%= rows[i][columns[j]] %></a>
                     <% } else { %>
                         <%= rows[i][columns[j]] %>
                     <% } %>

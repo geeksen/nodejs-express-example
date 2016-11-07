@@ -8,18 +8,7 @@ var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 
-var mysql = require('mysql')
-var redis = require('redis')
-
 var app = express()
-
-app.set('db', mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '123456'
-}))
-
-app.set('rd', redis.createClient(6379, 'localhost'))
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'))
@@ -35,7 +24,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', require('./routes/index'))
 app.use('/admin', require('./routes/admin'))
-app.use('/database', require('./routes/database'))
+app.use('/mysql', require('./routes/mysql'))
+app.use('/sqlite3', require('./routes/sqlite3'))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

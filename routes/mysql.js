@@ -9,7 +9,7 @@ router.get('/show_databases', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db_000').getConnection(next)
+      return req.app.get('db000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -34,7 +34,7 @@ router.get('/show_tables', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db_000').getConnection(next)
+      return req.app.get('db000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -59,7 +59,7 @@ router.get('/desc_table', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db_000').getConnection(next)
+      return req.app.get('db000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -86,7 +86,7 @@ router.get('/select_limit', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db_000').getConnection(next)
+      return req.app.get('db000').getConnection(next)
     },
     function (db_, next) {
       db = db_
@@ -131,7 +131,7 @@ router.get('/select_where', function (req, res, next) {
 
   async.waterfall([
     function (next) {
-      return req.app.get('db_000').getConnection(next)
+      return req.app.get('db000').getConnection(next)
     },
     function (db_, next) {
       db = db_

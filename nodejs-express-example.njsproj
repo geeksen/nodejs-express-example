@@ -12,7 +12,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>e4416422-68cb-4d52-921c-79caf20e3d70</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>bin\www.js</StartupFile>
+    <StartupFile>bin\www</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -102,7 +102,7 @@
     <Compile Include="routes\mysql.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\admin.js" />
-    <Content Include="bin\www.js" />
+    <Content Include="bin\www" />
     <Content Include="cfg.json" />
     <Content Include="package.json" />
     <Content Include="public\bootstrap-3.3.7\assets\brand\bootstrap-outline.svg" />

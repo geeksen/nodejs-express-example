@@ -1,6 +1,6 @@
 
-var express = require('express')
-var router = express.Router()
+let express = require('express')
+let router = express.Router()
 
 router.get('/show_databases', function (req, res, next) {
   req.app.get('db000').getConnection(
@@ -81,8 +81,8 @@ router.get('/select_limit', function (req, res, next) {
             }
           }
 
-          var offset = parseInt(req.query.offset)
-          var rowCount = parseInt(req.query.row_count)
+          let offset = parseInt(req.query.offset)
+          let rowCount = parseInt(req.query.row_count)
           dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount],
             function renderPage (err, rows, fields) {
               dbConn.release()

@@ -1,8 +1,6 @@
 
-var express = require('express')
-var router = express.Router()
-
-// var async = require('async')
+let express = require('express')
+let router = express.Router()
 
 router.get('/login', function (req, res, next) {
   res.render('admin/login', {})

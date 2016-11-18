@@ -2,122 +2,96 @@
 var express = require('express')
 var router = express.Router()
 
-var async = require('async')
-
 router.get('/show_databases', function (req, res, next) {
-  var db = null
-
-  async.waterfall([
-    function (next) {
-      return req.app.get('db000').getConnection(next)
-    },
-    function (db_, next) {
-      db = db_
-      return db.query('SHOW DATABASES', next)
-    },
-    function (rows, fields, next) {
-      db.release()
-      return res.render('mysql/show_databases', { req: req, rows: rows })
-    }
-  ],
-    function (err) {
-      if (db != null) {
-        db.release()
+  req.app.get('db000').getConnection(
+    function showDatabases (err, dbConn) {
+      if (err) {
+        dbConn.release()
+        res.send(err.message)
+        return
       }
-      return res.send(err.message)
-    }
-  )
+
+      dbConn.query('SHOW DATABASES',
+        function renderPage (err, rows, fields) {
+          dbConn.release()
+
+          if (err) { res.send(err.message) }
+          res.render('mysql/show_databases', { req: req, rows: rows })
+        })
+    })
 })
 
 router.get('/show_tables', function (req, res, next) {
-  var db = null
-
-  async.waterfall([
-    function (next) {
-      return req.app.get('db000').getConnection(next)
-    },
-    function (db_, next) {
-      db = db_
-      return db.query('SHOW TABLES IN ' + req.query.database, next)
-    },
-    function (rows, fields, next) {
-      db.release()
-      return res.render('mysql/show_tables', { req: req, rows: rows })
-    }
-  ],
-    function (err) {
-      if (db != null) {
-        db.release()
+  req.app.get('db000').getConnection(
+    function showTables (err, dbConn) {
+      if (err) {
+        dbConn.release()
+        res.send(err.message)
+        return
       }
-      return res.send(err.message)
-    }
-  )
+
+      dbConn.query('SHOW TABLES IN ' + req.query.database,
+        function renderPage (err, rows, fields) {
+          dbConn.release()
+
+          if (err) { res.send(err.message) }
+          res.render('mysql/show_tables', { req: req, rows: rows })
+        })
+    })
 })
 
 router.get('/desc_table', function (req, res, next) {
-  var db = null
-
-  async.waterfall([
-    function (next) {
-      return req.app.get('db000').getConnection(next)
-    },
-    function (db_, next) {
-      db = db_
-      return db.query('DESC ' + req.query.database + '.' + req.query.table, next)
-    },
-    function (rows, fields, next) {
-      db.release()
-      return res.render('mysql/desc_table', { req: req, rows: rows })
-    }
-  ],
-    function (err) {
-      if (db != null) {
-        db.release()
+  req.app.get('db000').getConnection(
+    function descTable (err, dbConn) {
+      if (err) {
+        dbConn.release()
+        res.send(err.message)
+        return
       }
-      return res.send(err.message)
-    }
-  )
+
+      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+        function renderPage (err, rows, fields) {
+          dbConn.release()
+
+          if (err) { res.send(err.message) }
+          res.render('mysql/desc_table', { req: req, rows: rows })
+        })
+    })
 })
 
 router.get('/select_limit', function (req, res, next) {
-  var db = null
-  var columns = []
-  var keys = []
-
-  async.waterfall([
-    function (next) {
-      return req.app.get('db000').getConnection(next)
-    },
-    function (db_, next) {
-      db = db_
-      return db.query('DESC ' + req.query.database + '.' + req.query.table, next)
-    },
-    function (rows, fields, next) {
-      for (var i = 0; i < rows.length; ++i) {
-        columns.push(rows[i].Field)
-        if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-          keys.push(rows[i].Field)
-        }
+  req.app.get('db000').getConnection(
+    function descTable (err, dbConn) {
+      if (err) {
+        dbConn.release()
+        res.send(err.message)
+        return
       }
 
-      var offset = parseInt(req.query.offset)
-      var rowCount = parseInt(req.query.row_count)
+      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+        function selectLimit (err, rows, fields) {
+          if (err) { res.send(err.message) }
 
-      return db.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount], next)
-    },
+          let columns = []
+          let keys = []
+          for (let i = 0; i < rows.length; ++i) {
+            columns.push(rows[i].Field)
+            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
+              keys.push(rows[i].Fields)
+            }
+          }
 
-    function (rows, fields, next) {
-      db.release()
-      return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
-    }
-  ],
-    function (err) {
-      if (db != null) {
-        db.release()
-      }
-      return res.send(err.message)
-    }
-  )
+          var offset = parseInt(req.query.offset)
+          var rowCount = parseInt(req.query.row_count)
+          dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount],
+            function renderPage (err, rows, fields) {
+              dbConn.release()
+
+              if (err) { res.send(err.message) }
+              res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
+            })
+        })
+    })
 })
 
 router.get('/select_form', function (req, res, next) {
@@ -125,45 +99,36 @@ router.get('/select_form', function (req, res, next) {
 })
 
 router.get('/select_where', function (req, res, next) {
-  var db = null
-  var columns = []
-  var keys = []
-
-  async.waterfall([
-    function (next) {
-      return req.app.get('db000').getConnection(next)
-    },
-    function (db_, next) {
-      db = db_
-      return db.query('DESC ' + req.query.database + '.' + req.query.table, next)
-    },
-    function (rows, fields, next) {
-      for (var i = 0; i < rows.length; ++i) {
-        columns.push(rows[i].Field)
-        if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-          keys.push(rows[i].Field)
-        }
+  req.app.get('db000').getConnection(
+    function descTable (err, dbConn) {
+      if (err) {
+        dbConn.release()
+        res.send(err.message)
+        return
       }
 
-      return db.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' WHERE ' + req.query.key + ' = ? LIMIT 0, 1', [req.query.value], next)
-    },
-    function (rows, fields, next) {
-      db.release()
+      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+        function selectWhere (err, rows, fields) {
+          if (err) { res.send(err.message) }
 
-      if (rows.length === 0) {
-        return res.render('message', { message: 'not found' })
-      }
+          let columns = []
+          let keys = []
+          for (let i = 0; i < rows.length; ++i) {
+            columns.push(rows[i].Field)
+            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
+              keys.push(rows[i].Fields)
+            }
+          }
 
-      return res.render('mysql/select_where', { req: req, columns: columns, keys: keys, rows: rows })
-    }
-  ],
-    function (err) {
-      if (db != null) {
-        db.release()
-      }
-      return res.send(err.message)
-    }
-  )
+          dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' WHERE ' + req.query.key + ' = ? LIMIT 0, 1', [req.query.value],
+            function renderPage (err, rows, fields) {
+              dbConn.release()
+
+              if (err) { res.send(err.message) }
+              res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
+            })
+        })
+    })
 })
 
 module.exports = router

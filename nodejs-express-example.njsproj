@@ -39,6 +39,8 @@
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="views\admin\login.ejs" />
+    <Content Include="views\mysql\columns_form.ejs" />
+    <Content Include="views\mysql\database_form.ejs" />
     <Content Include="views\mysql\desc_table.ejs" />
     <Content Include="views\mysql\select_form.ejs" />
     <Content Include="views\mysql\select_limit.ejs" />
@@ -50,6 +52,7 @@
     <Content Include="views\include\header.ejs" />
     <Content Include="views\index.ejs" />
     <Content Include="views\message.ejs" />
+    <Content Include="views\mysql\table_form.ejs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

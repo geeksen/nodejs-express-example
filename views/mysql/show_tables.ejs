@@ -10,6 +10,10 @@
         </h1>
     </div>
 
+	<p>
+        <a href="/mysql/table_form?database=<%= req.query.database %>">CREATE TABLE</a>
+    </p>
+
     <table class="table table-bordered">
         <tr>
             <th>Tables in <%= req.query.database %></th>

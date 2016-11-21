@@ -8,11 +8,34 @@ router.get('/show_databases', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW DATABASES',
-        function renderPage (err, rows, fields) {
+        function resRender (err, rows, fields) {
           dbConn.release()
 
           if (err) { return res.send(err.message) }
           return res.render('mysql/show_databases', { req: req, rows: rows })
+        })
+    })
+})
+
+router.get('/database_form', function (req, res, next) {
+  return res.render('mysql/database_form', { req: req })
+})
+
+router.post('/create_database', function (req, res, next) {
+  if (req.body.database_name === '') {
+    return res.render('message', { message: 'database_name is required' })
+  }
+
+  req.app.get('db000').getConnection(
+    function createDatabase(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
+        function resRedirect(err, result) {
+          dbConn.release()
+
+          if (err) { return res.send(err.message) }
+          return res.redirect('/mysql/show_databases')
         })
     })
 })
@@ -23,7 +46,38 @@ router.get('/show_tables', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW TABLES IN ' + req.query.database,
-        function renderPage (err, rows, fields) {
+        function resRender (err, rows, fields) {
+          dbConn.release()
+
+          if (err) { return res.send(err.message) }
+          return res.render('mysql/show_tables', { req: req, rows: rows })
+        })
+    })
+})
+
+router.get('/table_form', function (req, res, next) {
+  return res.render('mysql/table_form', { req: req })
+})
+
+router.post('/columns_form', function (req, res, next) {
+  if (req.body.table_name === '') {
+    return res.render('message', { message: 'table_name is required' })
+  }
+
+  if (req.body.num_of_columns === '' || parseInt(req.body.num_of_columns) === 0) {
+    return res.render('message', { message: 'num_of_columns is required' })
+  }
+
+  return res.render('mysql/columns_form', { req: req })
+})
+
+router.get('/create_table', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function showTables(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('SHOW TABLES IN ' + req.query.database,
+        function resRender(err, rows, fields) {
           dbConn.release()
 
           if (err) { return res.send(err.message) }
@@ -38,7 +92,7 @@ router.get('/desc_table', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
-        function renderPage (err, rows, fields) {
+        function resRender (err, rows, fields) {
           dbConn.release()
 
           if (err) { return res.send(err.message) }
@@ -68,7 +122,7 @@ router.get('/select_limit', function (req, res, next) {
           let offset = parseInt(req.query.offset)
           let rowCount = parseInt(req.query.row_count)
           dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount],
-            function renderPage (err, rows, fields) {
+            function resRender (err, rows, fields) {
               dbConn.release()
 
               if (err) { return res.send(err.message) }
@@ -101,7 +155,7 @@ router.get('/select_where', function (req, res, next) {
           }
 
           dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' WHERE ' + req.query.key + ' = ? LIMIT 0, 1', [req.query.value],
-            function renderPage (err, rows, fields) {
+            function resRender (err, rows, fields) {
               dbConn.release()
 
               if (err) { return res.send(err.message) }

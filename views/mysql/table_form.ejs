@@ -1,0 +1,38 @@
+﻿<% include ../include/header %>
+
+<!-- Begin page content -->
+<div class="container">
+    <div class="page-header">
+        <h1>
+            <a href="/mysql/show_databases">Databases</a>
+            /
+            <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+            /
+            Create Table
+        </h1>
+    </div>
+
+    <form class="form-horizontal" method="post" action="/mysql/columns_form">
+        <input type="hidden" name="database" value="<%= req.query.database %>">
+        <div class="form-group">
+            <label for="table_name" class="col-sm-2 control-label">Table Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="table_name" name="table_name" placeholder="Table Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="num_of_columns" class="col-sm-2 control-label">Num. of Columns</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="num_of_columns" name="num_of_columns" placeholder="Num. of Columns">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Create</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<% include ../include/footer %>

@@ -27,11 +27,11 @@ router.post('/create_database', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function createDatabase(err, dbConn) {
+    function createDatabase (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
-        function resRedirect(err, result) {
+        function resRedirect (err, result) {
           dbConn.release()
 
           if (err) { return res.send(err.message) }
@@ -68,16 +68,49 @@ router.post('/columns_form', function (req, res, next) {
     return res.render('message', { message: 'num_of_columns is required' })
   }
 
-  return res.render('mysql/columns_form', { req: req })
+  req.app.get('db000').getConnection(
+    function showTables (err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('SHOW TABLES IN ' + req.body.database,
+        function resRender (err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          for (let i = 0; i < rows.length; ++i) {
+            if (req.body.table_name === rows[i]['Tables_in_' + req.body.database]) {
+              return res.render('message', { message: 'table already exists' })
+            }
+          }
+
+          return res.render('mysql/columns_form', { req: req })
+        })
+    })
 })
 
-router.get('/create_table', function (req, res, next) {
+router.post('/create_table', function (req, res, next) {
+  if (req.body.name.length === 0) {
+    return res.render('message', { message: 'columns are required' })
+  }
+
+  if (req.body.name.length !== req.body.type.length) {
+    return res.render('message', { message: 'number of types are not matched' })
+  }
+
+  if (req.body.name.length !== req.body.index.length) {
+    return res.render('message', { message: 'number of indexes are not matched' })
+  }
+
+  if (req.body.name.length !== req.body.auto_increment.length) {
+    return res.render('message', { message: 'number of auto_increments are not matched' })
+  }
+
   req.app.get('db000').getConnection(
-    function showTables(err, dbConn) {
+    function showTables (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW TABLES IN ' + req.query.database,
-        function resRender(err, rows, fields) {
+        function resRender (err, rows, fields) {
           dbConn.release()
 
           if (err) { return res.send(err.message) }

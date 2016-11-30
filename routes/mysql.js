@@ -45,7 +45,7 @@ router.get('/show_tables', function (req, res, next) {
     function showTables (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SHOW TABLES IN ' + req.query.database,
+      dbConn.query('SHOW TABLES IN `' + req.query.database + '`',
         function resRender (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
@@ -72,7 +72,7 @@ router.post('/columns_form', function (req, res, next) {
     function showTables (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SHOW TABLES IN ' + req.body.database,
+      dbConn.query('SHOW TABLES IN `' + req.body.database + '`',
         function resRender (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
@@ -172,7 +172,7 @@ router.get('/desc_table', function (req, res, next) {
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function resRender (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
@@ -187,7 +187,7 @@ router.get('/select_limit', function (req, res, next) {
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function selectLimit (err, rows, fields) {
           if (err) { return res.send(err.message) }
 
@@ -202,7 +202,7 @@ router.get('/select_limit', function (req, res, next) {
 
           let offset = parseInt(req.query.offset)
           let rowCount = parseInt(req.query.row_count)
-          dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount],
+          dbConn.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [offset, rowCount],
             function resRender (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }
@@ -222,7 +222,7 @@ router.get('/select_where', function (req, res, next) {
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function selectWhere (err, rows, fields) {
           if (err) { return res.send(err.message) }
 
@@ -235,13 +235,28 @@ router.get('/select_where', function (req, res, next) {
             }
           }
 
-          dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' WHERE ' + req.query.key + ' = ? LIMIT 0, 1', [req.query.value],
+          dbConn.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
             function resRender (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
               return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
             })
+        })
+    })
+})
+
+router.get('/alter_form', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.render('mysql/alter_form', { req: req, rows: rows })
         })
     })
 })

@@ -17,14 +17,40 @@
     <table class="table table-bordered">
         <tr>
             <th>Tables in <%= req.query.database %></th>
+            <th>Alter</th>
+            <td>Rename</td>
+            <td>Drop</td>
         </tr>
         <% for (var i = 0; i < rows.length; ++i) { %>
           <tr>
               <td><a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
+              <td><a href="/mysql/alter_form?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
+              <td><form class="form-inline" method="post" action="/mysql/rename_table">
+                  <input type="hidden" name="table_name" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
+                  <input type="text" class="form-control" name="new_table_name" placeholder="New Table Name" />
+                  <button type="submit" class="btn btn-default">Rename</button></form></td>
+              <td><form class="form-inline form-drop" method="post" action="/mysql/drop_table">
+                  <input type="hidden" name="table_name" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
+                  <button type="submit" class="btn btn-default">Drop</button></form></td>
           </tr>
         <% } %>
     </table>
 
 </div>
+
+<script type="text/javascript">
+    var confirmFormDrop = function () {
+        var formDrop = document.getElementsByClassName('form-drop')
+        for (let i = 0; i < formDrop.length; ++i) {
+            formDrop[i].onsubmit = function () {
+                return confirm('Really?')
+            }
+        }
+    }
+
+    window.onload = function () {
+        confirmFormDrop()
+    }
+</script>
 
 <% include ../include/footer %>

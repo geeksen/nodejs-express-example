@@ -10,8 +10,8 @@ router.get('/show_databases', function (req, res, next) {
       dbConn.query('SHOW DATABASES',
         function resRender (err, rows, fields) {
           dbConn.release()
-
           if (err) { return res.send(err.message) }
+
           return res.render('mysql/show_databases', { req: req, rows: rows })
         })
     })
@@ -33,8 +33,8 @@ router.post('/create_database', function (req, res, next) {
       dbConn.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
         function resRedirect (err, result) {
           dbConn.release()
-
           if (err) { return res.send(err.message) }
+
           return res.redirect('/mysql/show_databases')
         })
     })
@@ -48,8 +48,8 @@ router.get('/show_tables', function (req, res, next) {
       dbConn.query('SHOW TABLES IN ' + req.query.database,
         function resRender (err, rows, fields) {
           dbConn.release()
-
           if (err) { return res.send(err.message) }
+
           return res.render('mysql/show_tables', { req: req, rows: rows })
         })
     })
@@ -94,27 +94,75 @@ router.post('/create_table', function (req, res, next) {
   }
 
   if (req.body.name.length !== req.body.type.length) {
-    return res.render('message', { message: 'number of types are not matched' })
+    return res.render('message', { message: 'number of types is not matched' })
   }
 
   if (req.body.name.length !== req.body.index.length) {
-    return res.render('message', { message: 'number of indexes are not matched' })
+    return res.render('message', { message: 'number of indexes is not matched' })
   }
 
   if (req.body.name.length !== req.body.auto_increment.length) {
-    return res.render('message', { message: 'number of auto_increments are not matched' })
+    return res.render('message', { message: 'number of auto_increments is not matched' })
   }
 
   req.app.get('db000').getConnection(
-    function showTables (err, dbConn) {
+    function createTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SHOW TABLES IN ' + req.query.database,
+      let columnsAndIndexes = []
+      let primaryKeys = []
+      let uniqueKeys = []
+      let keys = []
+      let autoIncrements = []
+
+      for (let i = 0; i < req.body.name.length; ++i) {
+        columnsAndIndexes.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL ' + req.body.auto_increment[i])
+
+        if (req.body.index[i] === 'PRIMARY') {
+          primaryKeys.push('`' + req.body.name[i] + '`')
+        }
+        else if (req.body.index[i] === 'UNIQUE') {
+          uniqueKeys.push('`' + req.body.name[i] + '`')
+        }
+        else if (req.body.index[i] === 'INDEX') {
+          keys.push('`' + req.body.name[i] + '`')
+        }
+
+        if (req.body.auto_increment[i] === 'AUTO_INCREMENT') {
+          autoIncrements.push(req.body.auto_increment[i])
+        }
+      }
+
+      if (primaryKeys.length > 0) {
+        columnsAndIndexes.push('PRIMARY KEY (' + primaryKeys.join(',') + ')')
+      }
+
+      if (uniqueKeys.length > 0) {
+        columnsAndIndexes.push('UNIQUE KEY ' + uniqueKeys[0] + ' (' + uniqueKeys.join(',') + ')')
+      }
+
+      if (keys.length > 0) {
+        columnsAndIndexes.push('KEY ' + keys[0] + ' (' + keys.join(',') + ')')
+      }
+
+      if (autoIncrements.length > 1) {
+        return res.render('message', { message: 'too many auto_increments' })
+      }
+
+      let sql = 'CREATE TABLE IF NOT EXISTS `' + req.body.database + '`.`' + req.body.table_name + '` ('
+      sql += columnsAndIndexes.join(',\n')
+      sql += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8'
+
+      if (autoIncrements.length > 0) {
+        sql += ' AUTO_INCREMENT=1'
+      }
+      
+      dbConn.query(sql,
         function resRender (err, rows, fields) {
           dbConn.release()
-
           if (err) { return res.send(err.message) }
-          return res.render('mysql/show_tables', { req: req, rows: rows })
+
+          return res.redirect('/mysql/show_tables?database=' + req.body.database)
         })
     })
 })
@@ -127,8 +175,8 @@ router.get('/desc_table', function (req, res, next) {
       dbConn.query('DESC ' + req.query.database + '.' + req.query.table,
         function resRender (err, rows, fields) {
           dbConn.release()
-
           if (err) { return res.send(err.message) }
+
           return res.render('mysql/desc_table', { req: req, rows: rows })
         })
     })
@@ -157,8 +205,8 @@ router.get('/select_limit', function (req, res, next) {
           dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' LIMIT ?, ?', [offset, rowCount],
             function resRender (err, rows, fields) {
               dbConn.release()
-
               if (err) { return res.send(err.message) }
+
               return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
             })
         })
@@ -190,8 +238,8 @@ router.get('/select_where', function (req, res, next) {
           dbConn.query('SELECT * FROM ' + req.query.database + '.' + req.query.table + ' WHERE ' + req.query.key + ' = ? LIMIT 0, 1', [req.query.value],
             function resRender (err, rows, fields) {
               dbConn.release()
-
               if (err) { return res.send(err.message) }
+
               return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
             })
         })

@@ -13,6 +13,9 @@
     </div>
 
     <form method="post" action="/mysql/create_table">
+        <input type="hidden" name="database" value="<%= req.body.database %>" />
+        <input type="hidden" name="table_name" value="<%= req.body.table_name %>" />
+
     <table class="table table-bordered">
         <tr>
             <th>Name</th>

@@ -22,11 +22,13 @@ let db001 = mysql.createPool(cfg.db001)
 app.set('db000', db000)
 app.set('db001', db001)
 
+/*
 let redis = require('redis')
 let rd000 = redis.createClient(cfg.rd000.port, cfg.rd000.host)
 let rd001 = redis.createClient(cfg.rd001.port, cfg.rd001.host)
 app.set('rd000', rd000)
 app.set('rd001', rd001)
+*/
 
 /**
  * Create HTTP server.
@@ -108,8 +110,8 @@ function gracefulShutdown () {
   db000.end()
   db001.end()
 
-  rd000.quit()
-  rd001.quit()
+  // rd000.quit()
+  // rd001.quit()
 
   server.close(function () {
     process.exit()

@@ -40,6 +40,21 @@ router.post('/create_database', function (req, res, next) {
     })
 })
 
+router.post('/drop_database', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('DROP DATABASE `' + req.body.database + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.redirect('/mysql/show_databases')
+        })
+    })
+})
+
 router.get('/show_tables', function (req, res, next) {
   req.app.get('db000').getConnection(
     function showTables (err, dbConn) {
@@ -171,6 +186,21 @@ router.post('/create_table', function (req, res, next) {
     })
 })
 
+router.post('/drop_table', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('DROP TABLE `' + req.body.database + '`.`' + req.body.table + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.redirect('/mysql/show_tables?database=' + req.body.database)
+        })
+    })
+})
+
 router.get('/desc_table', function (req, res, next) {
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
@@ -182,6 +212,21 @@ router.get('/desc_table', function (req, res, next) {
           if (err) { return res.send(err.message) }
 
           return res.render('mysql/desc_table', { req: req, rows: rows })
+        })
+    })
+})
+
+router.get('/alter_form', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.render('mysql/alter_form', { req: req, rows: rows })
         })
     })
 })
@@ -250,7 +295,7 @@ router.get('/select_where', function (req, res, next) {
     })
 })
 
-router.get('/alter_form', function (req, res, next) {
+router.get('/insert_form', function (req, res, next) {
   req.app.get('db000').getConnection(
     function descTable(err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -260,7 +305,22 @@ router.get('/alter_form', function (req, res, next) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
-          return res.render('mysql/alter_form', { req: req, rows: rows })
+          return res.render('mysql/insert_form', { req: req, rows: rows })
+        })
+    })
+})
+
+router.get('/update_form', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.render('mysql/update_form', { req: req, rows: rows })
         })
     })
 })

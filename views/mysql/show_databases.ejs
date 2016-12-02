@@ -15,14 +15,33 @@
     <table class="table table-bordered">
         <tr>
             <th>Database</th>
+            <th>Drop</th>
         </tr>
         <% for (var i = 0; i < rows.length; ++i) { %>
           <tr>
               <td><a href="/mysql/show_tables?database=<%= rows[i].Database %>"><%= rows[i].Database %></a></td>
+              <td><form class="form-inline form-drop" method="post" action="/mysql/drop_database">
+                  <input type="hidden" name="database" value="<%= rows[i].Database %>" />
+                  <button type="submit" class="btn btn-default">Drop</button></form></td>
           </tr>
         <% } %>
     </table>
 
 </div>
+
+<script type="text/javascript">
+    var confirmFormDrop = function () {
+        var formDrop = document.getElementsByClassName('form-drop')
+        for (let i = 0; i < formDrop.length; ++i) {
+            formDrop[i].onsubmit = function () {
+                return confirm('Really?')
+            }
+        }
+    }
+
+    window.onload = function () {
+        confirmFormDrop()
+    }
+</script>
 
 <% include ../include/footer %>

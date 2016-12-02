@@ -43,6 +43,7 @@
     <Content Include="views\mysql\columns_form.ejs" />
     <Content Include="views\mysql\database_form.ejs" />
     <Content Include="views\mysql\desc_table.ejs" />
+    <Content Include="views\mysql\insert_form.ejs" />
     <Content Include="views\mysql\select_form.ejs" />
     <Content Include="views\mysql\select_limit.ejs" />
     <Content Include="views\mysql\select_where.ejs" />
@@ -54,6 +55,7 @@
     <Content Include="views\index.ejs" />
     <Content Include="views\message.ejs" />
     <Content Include="views\mysql\table_form.ejs" />
+    <Content Include="views\mysql\update_form.ejs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

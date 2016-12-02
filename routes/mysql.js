@@ -64,6 +64,10 @@ router.post('/columns_form', function (req, res, next) {
     return res.render('message', { message: 'table_name is required' })
   }
 
+  if (req.body.num_of_columns < 2) {
+    return res.render('message', { message: 'num_of_columns must be bigger than 1' })
+  }
+
   if (req.body.num_of_columns === '' || parseInt(req.body.num_of_columns) === 0) {
     return res.render('message', { message: 'num_of_columns is required' })
   }

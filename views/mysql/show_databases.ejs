@@ -8,7 +8,7 @@
         </h1>
     </div>
 
-	<p>
+    <p>
         <a href="/mysql/database_form">CREATE DATABASE</a>
     </p>
 
@@ -20,9 +20,12 @@
         <% for (var i = 0; i < rows.length; ++i) { %>
           <tr>
               <td><a href="/mysql/show_tables?database=<%= rows[i].Database %>"><%= rows[i].Database %></a></td>
-              <td><form class="form-drop" method="post" action="/mysql/drop_database">
-                  <input type="hidden" name="database" value="<%= rows[i].Database %>" />
-                  <button type="submit" class="btn btn-default">Drop</button></form></td>
+              <td>
+                  <form class="form-drop" method="post" action="/mysql/drop_database">
+                      <input type="hidden" name="database" value="<%= rows[i].Database %>" />
+                      <button type="submit" class="btn btn-default">Drop</button>
+                  </form>
+              </td>
           </tr>
         <% } %>
     </table>

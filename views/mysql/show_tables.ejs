@@ -10,7 +10,7 @@
         </h1>
     </div>
 
-	<p>
+    <p>
         <a href="/mysql/table_form?database=<%= req.query.database %>">CREATE TABLE</a>
     </p>
 
@@ -25,14 +25,20 @@
           <tr>
               <td><a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
               <td><a href="/mysql/alter_form?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
-              <td><form class="form-inline" method="post" action="/mysql/rename_table">
-                  <input type="hidden" name="table_name" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
-                  <input type="text" class="form-control" name="new_table_name" placeholder="New Table Name" />
-                  <button type="submit" class="btn btn-default">Rename</button></form></td>
-              <td><form class="form-drop" method="post" action="/mysql/drop_table">
-                  <input type="hidden" name="database" value="<%= req.query.database %>" />
-                  <input type="hidden" name="table" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
-                  <button type="submit" class="btn btn-default">Drop</button></form></td>
+              <td>
+                  <form class="form-inline" method="post" action="/mysql/rename_table">
+                      <input type="hidden" name="table_name" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
+                      <input type="text" class="form-control" name="new_table_name" placeholder="New Table Name" />
+                      <button type="submit" class="btn btn-default">Rename</button>
+                  </form>
+              </td>
+              <td>
+                  <form class="form-drop" method="post" action="/mysql/drop_table">
+                      <input type="hidden" name="database" value="<%= req.query.database %>" />
+                      <input type="hidden" name="table" value="<%= rows[i]['Tables_in_' + req.query.database] %>" />
+                      <button type="submit" class="btn btn-default">Drop</button>
+                  </form>
+              </td>
           </tr>
         <% } %>
     </table>

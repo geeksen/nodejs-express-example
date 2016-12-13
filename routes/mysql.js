@@ -8,7 +8,7 @@ router.get('/show_databases', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW DATABASES',
-        function resRender (err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -31,7 +31,7 @@ router.post('/create_database', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
-        function resRedirect (err, result) {
+        function doResponse (err, result) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -42,11 +42,11 @@ router.post('/create_database', function (req, res, next) {
 
 router.post('/drop_database', function (req, res, next) {
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function dropDatabase (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DROP DATABASE `' + req.body.database + '`',
-        function resRender(err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -61,7 +61,7 @@ router.get('/show_tables', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW TABLES IN `' + req.query.database + '`',
-        function resRender (err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -92,7 +92,7 @@ router.post('/columns_form', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('SHOW TABLES IN `' + req.body.database + '`',
-        function resRender (err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -139,11 +139,9 @@ router.post('/create_table', function (req, res, next) {
 
         if (req.body.index[i] === 'PRIMARY') {
           primaryKeys.push('`' + req.body.name[i] + '`')
-        }
-        else if (req.body.index[i] === 'UNIQUE') {
+        } else if (req.body.index[i] === 'UNIQUE') {
           uniqueKeys.push('`' + req.body.name[i] + '`')
-        }
-        else if (req.body.index[i] === 'INDEX') {
+        } else if (req.body.index[i] === 'INDEX') {
           keys.push('`' + req.body.name[i] + '`')
         }
 
@@ -175,9 +173,9 @@ router.post('/create_table', function (req, res, next) {
       if (autoIncrements.length > 0) {
         sql += ' AUTO_INCREMENT=1'
       }
-      
+
       dbConn.query(sql,
-        function resRender (err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -188,11 +186,11 @@ router.post('/create_table', function (req, res, next) {
 
 router.post('/rename_table', function (req, res, next) {
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function renameTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('RENAME TABLE `' + req.body.database + '`.`' + req.body.table_name + '` TO `' + req.body.database + '`.`' + req.body.new_table_name + '`',
-        function resRender(err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -203,11 +201,11 @@ router.post('/rename_table', function (req, res, next) {
 
 router.post('/drop_table', function (req, res, next) {
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function dropTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DROP TABLE `' + req.body.database + '`.`' + req.body.table + '`',
-        function resRender(err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -222,7 +220,7 @@ router.get('/desc_table', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function resRender (err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -233,11 +231,11 @@ router.get('/desc_table', function (req, res, next) {
 
 router.get('/alter_form', function (req, res, next) {
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function resRender(err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -255,54 +253,46 @@ router.all('/alter_table', function (req, res, next) {
     database = req.query.database
     table = req.query.table
     sql += req.query.database + '`.`' + req.query.table + '` ADD PRIMARY KEY(`' + req.query.field + '`)'
-  }
-  else if (req.query.drop_primary === '1') {
+  } else if (req.query.drop_primary === '1') {
     database = req.query.database
     table = req.query.table
     sql += req.query.database + '`.`' + req.query.table + '` DROP PRIMARY KEY'
-  }
-  else if (req.query.add_unique === '1') {
+  } else if (req.query.add_unique === '1') {
     database = req.query.database
     table = req.query.table
     sql += req.query.database + '`.`' + req.query.table + '` ADD UNIQUE KEY(`' + req.query.field + '`)'
-  }
-  else if (req.query.add_index === '1') {
+  } else if (req.query.add_index === '1') {
     database = req.query.database
     table = req.query.table
     sql += req.query.database + '`.`' + req.query.table + '` ADD INDEX(`' + req.query.field + '`)'
-  }
-  else if (req.query.drop_index === '1') {
+  } else if (req.query.drop_index === '1') {
     database = req.query.database
     table = req.query.table
     sql += req.query.database + '`.`' + req.query.table + '` DROP INDEX `' + req.query.field + '`'
-  }
-  else if (req.body.add_first === '1') {
+  } else if (req.body.add_first === '1') {
     database = req.body.database
     table = req.body.table
     sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL FIRST'
-  }
-  else if (req.body.add_after === '1') {
+  } else if (req.body.add_after === '1') {
     database = req.body.database
     table = req.body.table
     sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL AFTER `' + req.body.field + '`'
-  }
-  else if (req.body.change_column === '1') {
+  } else if (req.body.change_column === '1') {
     database = req.body.database
     table = req.body.table
     sql += req.body.database + '`.`' + req.body.table + '` CHANGE `' + req.body.field + '` `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL'
-  }
-  else if (req.body.drop_column === '1') {
+  } else if (req.body.drop_column === '1') {
     database = req.body.database
     table = req.body.table
     sql += req.body.database + '`.`' + req.body.table + '` DROP `' + req.body.field + '`'
   }
-  
+
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function alterTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
       dbConn.query(sql,
-        function resRender(err, rows, fields) {
+        function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
@@ -332,7 +322,7 @@ router.get('/select_limit', function (req, res, next) {
           let offset = parseInt(req.query.offset)
           let rowCount = parseInt(req.query.row_count)
           dbConn.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [offset, rowCount],
-            function resRender (err, rows, fields) {
+            function doResponse (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
@@ -365,7 +355,7 @@ router.get('/select_where', function (req, res, next) {
           }
 
           dbConn.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
-            function resRender (err, rows, fields) {
+            function doResponse (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
@@ -375,32 +365,37 @@ router.get('/select_where', function (req, res, next) {
     })
 })
 
-router.get('/insert_form', function (req, res, next) {
+router.post('/execute', function (req, res, next) {
   req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
+    function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function resRender(err, rows, fields) {
-          dbConn.release()
+      dbConn.query('DESC `' + req.body.database + '`.`' + req.body.table + '`',
+        function execute (err, rows, fields) {
           if (err) { return res.send(err.message) }
 
-          return res.render('mysql/insert_form', { req: req, rows: rows })
-        })
-    })
-})
+          let columns = []
+          let keys = []
+          for (let i = 0; i < rows.length; ++i) {
+            columns.push(rows[i].Field)
+            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
+              keys.push(rows[i].Field)
+            }
+          }
 
-router.get('/update_form', function (req, res, next) {
-  req.app.get('db000').getConnection(
-    function descTable(err, dbConn) {
-      if (err) { return res.send(err.message) }
+          let sql = ''
+          if (req.body.insert === '1') {
+          } else if (req.body.update === '1') {
+          } else if (req.body.delete === '1') {
+          }
 
-      dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function resRender(err, rows, fields) {
-          dbConn.release()
-          if (err) { return res.send(err.message) }
+          dbConn.query(sql,
+            function doResponse (err, rows, fields) {
+              dbConn.release()
+              if (err) { return res.send(err.message) }
 
-          return res.render('mysql/update_form', { req: req, rows: rows })
+              return res.redirect('/mysql/select_limit?database=' + req.body.database + '&amp;table=' + req.body.table + '&amp;offset=0&amp;row_count=10')
+            })
         })
     })
 })

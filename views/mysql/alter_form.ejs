@@ -13,8 +13,8 @@
     </div>
 
     <table class="table table-bordered">
-        <form>
-            <tr>
+        <form method="post" action="/mysql/alter_table">
+            <tr class="small">
                 <th>Field</th>
                 <th>Type</th>
                 <th>Null</th>
@@ -25,9 +25,11 @@
                 <th>Unique</th>
                 <th>Index</th>
                 <td>
-                    <input type="text" class="form-control input-sm" name="name" /></td>
+                    <input type="hidden" name="database" value="<%= req.query.database %>" />
+                    <input type="hidden" name="table" value="<%= req.query.table %>" />
+                    <input type="text" class="form-control input-sm" name="new_name" placeholder="New Name" /></td>
                 <td>
-                    <select class="form-control input-sm" name="type">
+                    <select class="form-control input-sm" name="new_type">
                         <option value=""></option>
                         <option value="bigint(20)">bigint(20)</option>
                         <option value="int(11)">int(11)</option>
@@ -38,27 +40,46 @@
                         <option value="datetime">datetime</option>
                     </select></td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs">Add</button></td>
+                    <button type="submit" class="btn btn-default btn-xs" name="add_first" value="1">Add</button></td>
                 <th>Change</th>
                 <th>Drop</th>
             </tr>
         </form>
         <% for (var i = 0; i < rows.length; ++i) { %>
-        <form>
-            <tr>
+        <form method="post" action="/mysql/alter_table">
+            <tr class="small">
                 <td><%= rows[i].Field %></td>
                 <td><%= rows[i].Type %></td>
                 <td><%= rows[i].Null %></td>
                 <td><%= rows[i].Key %></td>
                 <td><%= rows[i].Default %></td>
                 <td><%= rows[i].Extra %></td>
-                <td>Primary</td>
-                <td>Unique</td>
-                <td>Index</td>
+
+                <% if (rows[i].Key === 'PRI') { %>
+                    <td><a href="/mysql/alter_table?drop_primary=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                <% } else { %>
+                    <td><a href="/mysql/alter_table?add_primary=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Primary</a></td>
+                <% } %>
+
+                <% if (rows[i].Key === 'UNI') { %>
+                    <td><a href="/mysql/alter_table?drop_index=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                <% } else { %>
+                    <td><a href="/mysql/alter_table?add_unique=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Unique</a></td>
+                <% } %>
+
+                <% if (rows[i].Key === 'MUL') { %>
+                    <td><a href="/mysql/alter_table?drop_index=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                <% } else { %>
+                    <td><a href="/mysql/alter_table?add_index=1&amp;database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Index</a></td>
+                <% } %>
+                
                 <td>
-                    <input type="text" class="form-control input-sm" name="name" /></td>
+                    <input type="hidden" name="database" value="<%= req.query.database %>" />
+                    <input type="hidden" name="table" value="<%= req.query.table %>" />
+                    <input type="hidden" name="field" value="<%= rows[i].Field %>" />
+                    <input type="text" class="form-control input-sm" name="new_name" placeholder="New Name" /></td>
                 <td>
-                    <select class="form-control input-sm" name="type">
+                    <select class="form-control input-sm" name="new_type">
                         <option value=""></option>
                         <option value="bigint(20)">bigint(20)</option>
                         <option value="int(11)">int(11)</option>
@@ -69,14 +90,13 @@
                         <option value="datetime">datetime</option>
                     </select></td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs">Add</button>
+                    <button type="submit" class="btn btn-default btn-xs" name="add_after" value="1">Add</button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs">Change</button>
+                    <button type="submit" class="btn btn-default btn-xs" name="change_column" value="1">Change</button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs">Drop</button>
-
+                    <button type="submit" class="btn btn-default btn-xs" name="drop_column" value="1">Drop</button>
                 </td>
             </tr>
         </form>

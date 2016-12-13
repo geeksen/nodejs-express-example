@@ -186,6 +186,21 @@ router.post('/create_table', function (req, res, next) {
     })
 })
 
+router.post('/rename_table', function (req, res, next) {
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query('RENAME TABLE `' + req.body.database + '`.`' + req.body.table_name + '` TO `' + req.body.database + '`.`' + req.body.new_table_name + '`',
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.redirect('/mysql/show_tables?database=' + req.body.database)
+        })
+    })
+})
+
 router.post('/drop_table', function (req, res, next) {
   req.app.get('db000').getConnection(
     function descTable(err, dbConn) {
@@ -227,6 +242,71 @@ router.get('/alter_form', function (req, res, next) {
           if (err) { return res.send(err.message) }
 
           return res.render('mysql/alter_form', { req: req, rows: rows })
+        })
+    })
+})
+
+router.all('/alter_table', function (req, res, next) {
+  let database = ''
+  let table = ''
+  let sql = 'ALTER TABLE `'
+
+  if (req.query.add_primary === '1') {
+    database = req.query.database
+    table = req.query.table
+    sql += req.query.database + '`.`' + req.query.table + '` ADD PRIMARY KEY(`' + req.query.field + '`)'
+  }
+  else if (req.query.drop_primary === '1') {
+    database = req.query.database
+    table = req.query.table
+    sql += req.query.database + '`.`' + req.query.table + '` DROP PRIMARY KEY'
+  }
+  else if (req.query.add_unique === '1') {
+    database = req.query.database
+    table = req.query.table
+    sql += req.query.database + '`.`' + req.query.table + '` ADD UNIQUE KEY(`' + req.query.field + '`)'
+  }
+  else if (req.query.add_index === '1') {
+    database = req.query.database
+    table = req.query.table
+    sql += req.query.database + '`.`' + req.query.table + '` ADD INDEX(`' + req.query.field + '`)'
+  }
+  else if (req.query.drop_index === '1') {
+    database = req.query.database
+    table = req.query.table
+    sql += req.query.database + '`.`' + req.query.table + '` DROP INDEX `' + req.query.field + '`'
+  }
+  else if (req.body.add_first === '1') {
+    database = req.body.database
+    table = req.body.table
+    sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL FIRST'
+  }
+  else if (req.body.add_after === '1') {
+    database = req.body.database
+    table = req.body.table
+    sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL AFTER `' + req.body.field + '`'
+  }
+  else if (req.body.change_column === '1') {
+    database = req.body.database
+    table = req.body.table
+    sql += req.body.database + '`.`' + req.body.table + '` CHANGE `' + req.body.field + '` `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL'
+  }
+  else if (req.body.drop_column === '1') {
+    database = req.body.database
+    table = req.body.table
+    sql += req.body.database + '`.`' + req.body.table + '` DROP `' + req.body.field + '`'
+  }
+  
+  req.app.get('db000').getConnection(
+    function descTable(err, dbConn) {
+      if (err) { return res.send(err.message) }
+
+      dbConn.query(sql,
+        function resRender(err, rows, fields) {
+          dbConn.release()
+          if (err) { return res.send(err.message) }
+
+          return res.redirect('/mysql/alter_form?database=' + database + '&table=' + table)
         })
     })
 })

@@ -26,7 +26,7 @@
             <th>Default</th>
             <th>Extra</th>
         </tr>
-        <% for (var i = 0; i < rows.length; ++i) { %>
+        <% for (let i = 0; i < rows.length; ++i) { %>
           <tr>
               <td><% if (i == 0 || ['PRI', 'UNI'].indexOf(rows[i].Key) > -1) { %>
                     <a href="/mysql/select_form?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;key=<%= rows[i].Field %>">SELECT WHERE</a>

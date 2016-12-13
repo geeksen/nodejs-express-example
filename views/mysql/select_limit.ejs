@@ -13,28 +13,42 @@
     </div>
 
     <p>
-        <a href="/mysql/insert_form?database=<%= req.query.database %>&amp;table=<%= req.query.table %>">INSERT</a>
+        <a href="/mysql/insert_form?database=<%= req.query.database %>&amp;table=<%= req.query.table %>">CSV UPLOAD</a>
     </p>
 
     <div class="table-responsive">
         <table class="table table-bordered">
-            <tr>
-                <% for (var i = 0; i < columns.length; ++i) { %>
+            <tr class="small">
+                <% for (let i = 0; i < columns.length; ++i) { %>
                 <th><%= columns[i] %></th>
                 <% } %>
+                <th></th>
             </tr>
-            <% for (var i = 0; i < rows.length; ++i) { %>
-          <tr>
-              <% for (var j = 0; j < columns.length; ++j) { %>
-                <td><% if (keys.indexOf(columns[j]) > -1 ) { %>
-                        <a href="/mysql/select_where?database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;key=<%= columns[j] %>&amp;value=<%= rows[i][columns[j]] %>"><%= rows[i][columns[j]] %></a>
-                    <% } else { %>
-                        <%= rows[i][columns[j]] %>
+            <form method="post" action="/mysql/execute">
+                <tr class="small">
+                    <% for (let i = 0; i < columns.length; ++i) { %>
+                <td>
+                    <input type="text" class="form-control input-sm" name="<%= columns[i] %>" /></td>
                     <% } %>
-
-                </td>
-              <% } %>
-          </tr>
+                <td>
+                    <button type="submit" class="btn btn-default btn-xs" name="insert" value="1">Insert</button></td>
+                </tr>
+            </form>
+            <% for (let i = 0; i < rows.length; ++i) { %>
+          <form method="post" action="/mysql/execute">
+              <tr>
+                  <% for (let j = 0; j < columns.length; ++j) { %>
+                <td>
+                    <input type="text" class="form-control input-sm" name="<%= columns[i] %>" value="<%= rows[i][columns[j]] %>" /></td>
+                  <% } %>
+              <td>
+                  <input type="hidden" name="key" value="<%= keys[0] %>" />
+                  <input type="hidden" name="value" value="<%= rows[i][keys[0]] %>" />
+                  <button type="submit" class="btn btn-default btn-xs" name="update" value="1">Update</button>
+                  <button type="submit" class="btn btn-default btn-xs" name="delete" value="1">Delete</button>
+              </td>
+              </tr>
+          </form>
             <% } %>
         </table>
     </div>

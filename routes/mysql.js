@@ -306,7 +306,7 @@ router.all('/alter_table', function (req, res, next) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
-          return res.redirect('/mysql/alter_form?database=' + database + '&table=' + table)
+          return res.redirect('/mysql/alter_form?database=' + database + '&amp;table=' + table)
         })
     })
 })
@@ -325,7 +325,7 @@ router.get('/select_limit', function (req, res, next) {
           for (let i = 0; i < rows.length; ++i) {
             columns.push(rows[i].Field)
             if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-              keys.push(rows[i].Fields)
+              keys.push(rows[i].Field)
             }
           }
 
@@ -360,7 +360,7 @@ router.get('/select_where', function (req, res, next) {
           for (let i = 0; i < rows.length; ++i) {
             columns.push(rows[i].Field)
             if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-              keys.push(rows[i].Fields)
+              keys.push(rows[i].Field)
             }
           }
 

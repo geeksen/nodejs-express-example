@@ -21,7 +21,7 @@
             <td>Rename</td>
             <td>Drop</td>
         </tr>
-        <% for (var i = 0; i < rows.length; ++i) { %>
+        <% for (let i = 0; i < rows.length; ++i) { %>
           <tr>
               <td><a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
               <td><a href="/mysql/alter_form?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
@@ -47,8 +47,8 @@
 </div>
 
 <script type="text/javascript">
-    var confirmFormDrop = function () {
-        var formDrop = document.getElementsByClassName('form-drop')
+    let confirmFormDrop = function () {
+        let formDrop = document.getElementsByClassName('form-drop')
         for (let i = 0; i < formDrop.length; ++i) {
             formDrop[i].onsubmit = function () {
                 return confirm('Really?')

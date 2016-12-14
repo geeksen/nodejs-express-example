@@ -296,7 +296,7 @@ router.all('/alter_table', function (req, res, next) {
           dbConn.release()
           if (err) { return res.send(err.message) }
 
-          return res.redirect('/mysql/alter_form?database=' + database + '&amp;table=' + table)
+          return res.redirect('/mysql/alter_form?database=' + database + '&table=' + table)
         })
     })
 })
@@ -307,15 +307,14 @@ router.get('/select_limit', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function selectLimit (err, rows, fields) {
+        function selectLimit (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
-          let columns = []
-          let keys = []
-          for (let i = 0; i < rows.length; ++i) {
-            columns.push(rows[i].Field)
-            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-              keys.push(rows[i].Field)
+          let key = ''
+          for (let i = 0; i < columns.length; ++i) {
+            if (columns[i].Key === 'PRI') {
+              key = columns[i].Field
+              break
             }
           }
 
@@ -326,7 +325,7 @@ router.get('/select_limit', function (req, res, next) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
-              return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
+              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: key })
             })
         })
     })
@@ -342,15 +341,14 @@ router.get('/select_where', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function selectWhere (err, rows, fields) {
+        function selectWhere (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
-          let columns = []
-          let keys = []
-          for (let i = 0; i < rows.length; ++i) {
-            columns.push(rows[i].Field)
-            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-              keys.push(rows[i].Field)
+          let key = ''
+          for (let i = 0; i < columns.length; ++i) {
+            if (columns[i].Key === 'PRI') {
+              key = columns[i].Field
+              break
             }
           }
 
@@ -359,7 +357,7 @@ router.get('/select_where', function (req, res, next) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
-              return res.render('mysql/select_limit', { req: req, columns: columns, keys: keys, rows: rows })
+              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: key })
             })
         })
     })
@@ -371,30 +369,63 @@ router.post('/execute', function (req, res, next) {
       if (err) { return res.send(err.message) }
 
       dbConn.query('DESC `' + req.body.database + '`.`' + req.body.table + '`',
-        function execute (err, rows, fields) {
+        function execute (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
-          let columns = []
-          let keys = []
-          for (let i = 0; i < rows.length; ++i) {
-            columns.push(rows[i].Field)
-            if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) {
-              keys.push(rows[i].Field)
-            }
-          }
-
+          let key = ''
+          let insertColumns = []
+          let params = []
+          let values = []
           let sql = ''
+
           if (req.body.insert === '1') {
+            for (let i = 0; i < columns.length; ++i) {
+              if (columns[i].Key === 'PRI') {
+                key = columns[i].Field
+              }
+
+              if (columns[i].Extra === 'auto_increment') {
+                continue
+              }
+
+              insertColumns.push(columns[i].Field)
+              params.push('?')
+              values.push(req.body[columns[i].Field])
+            }
+
+            sql += 'INSERT INTO `' + req.body.database + '`.`' + req.body.table + '`(`' + insertColumns.join('`, `') + '`) VALUES(' + params.join(', ') + ')'
           } else if (req.body.update === '1') {
+            for (let i = 0; i < columns.length; ++i) {
+              if (columns[i].Key === 'PRI') {
+                key = columns[i].Field
+              }
+
+              params.push('`' + columns[i].Field + '` = ?')
+              values.push(req.body[columns[i].Field])
+            }
+            values.push(req.body[key])
+
+            sql += 'UPDATE `' + req.body.database + '`.`' + req.body.table + '` SET ' + params.join(', ') + ' WHERE `' + key + '` = ?'
           } else if (req.body.delete === '1') {
+            for (let i = 0; i < columns.length; ++i) {
+              if (columns[i].Key === 'PRI') {
+                key = columns[i].Field
+                break
+              }
+            }
+            values.push(req.body[key])
+
+            sql += 'DELETE FROM `' + req.body.database + '`.`' + req.body.table + '` WHERE `' + key + '` = ?'
           }
 
-          dbConn.query(sql,
+          // return res.send(sql)
+
+          dbConn.query(sql, values,
             function doResponse (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }
 
-              return res.redirect('/mysql/select_limit?database=' + req.body.database + '&amp;table=' + req.body.table + '&amp;offset=0&amp;row_count=10')
+              return res.redirect('/mysql/select_limit?database=' + req.body.database + '&table=' + req.body.table + '&offset=0&row_count=10')
             })
         })
     })

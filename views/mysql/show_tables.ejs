@@ -23,8 +23,8 @@
         </tr>
         <% for (let i = 0; i < rows.length; ++i) { %>
           <tr>
-              <td><a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
-              <td><a href="/mysql/alter_form?database=<%= req.query.database %>&amp;table=<%= rows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
+              <td><a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= rows[i]['Tables_in_' + req.query.database] %>"><%= rows[i]['Tables_in_' + req.query.database] %></a></td>
+              <td><a href="/mysql/alter_form?database=<%= req.query.database %>&table=<%= rows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
               <td>
                   <form class="form-inline" method="post" action="/mysql/rename_table">
                       <input type="hidden" name="database" value="<%= req.query.database %>" />

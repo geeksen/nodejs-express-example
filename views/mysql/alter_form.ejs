@@ -8,7 +8,7 @@
             /
             <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
             /
-            <a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= req.query.table %>"><%= req.query.table %></a>
+            <a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>"><%= req.query.table %></a>
         </h1>
     </div>
 
@@ -56,21 +56,21 @@
                 <td><%= rows[i].Extra %></td>
 
                 <% if (rows[i].Key === 'PRI') { %>
-                    <td><a href="/mysql/alter_table?drop_primary=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                    <td><a href="/mysql/alter_table?drop_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_primary=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Primary</a></td>
+                    <td><a href="/mysql/alter_table?add_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Primary</a></td>
                 <% } %>
 
                 <% if (rows[i].Key === 'UNI') { %>
-                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_unique=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Unique</a></td>
+                    <td><a href="/mysql/alter_table?add_unique=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Unique</a></td>
                 <% } %>
 
                 <% if (rows[i].Key === 'MUL') { %>
-                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Drop</a></td>
+                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_index=1&database=<%= req.query.database %>&amp;table=<%= req.query.table %>&amp;field=<%= rows[i].Field %>">Index</a></td>
+                    <td><a href="/mysql/alter_table?add_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Index</a></td>
                 <% } %>
                 
                 <td>

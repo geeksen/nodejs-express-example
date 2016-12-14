@@ -8,29 +8,35 @@
             /
             <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
             /
-            <a href="/mysql/desc_table?database=<%= req.query.database %>&amp;table=<%= req.query.table %>"><%= req.query.table %></a>
+            <a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>"><%= req.query.table %></a>
         </h1>
     </div>
 
     <p>
-        <a href="/mysql/insert_form?database=<%= req.query.database %>&amp;table=<%= req.query.table %>">CSV UPLOAD</a>
+        <a href="/mysql/insert_form?database=<%= req.query.database %>&table=<%= req.query.table %>">CSV UPLOAD</a>
     </p>
 
     <div class="table-responsive">
         <table class="table table-bordered">
             <tr class="small">
                 <% for (let i = 0; i < columns.length; ++i) { %>
-                <th><%= columns[i] %></th>
+                <td><strong><%= columns[i].Field %></strong> <u><em><%= columns[i].Type %></em></u></td>
                 <% } %>
-                <th></th>
+                <td></td>
             </tr>
             <form method="post" action="/mysql/execute">
                 <tr class="small">
                     <% for (let i = 0; i < columns.length; ++i) { %>
-                <td>
-                    <input type="text" class="form-control input-sm" name="<%= columns[i] %>" /></td>
+                    <% if (columns[i].Extra === 'auto_increment') { %>
+                    <td>auto_increment</td>
+                    <% } else { %>
+                    <td>
+                        <input type="text" class="form-control input-sm" name="<%= columns[i].Field %>" /></td>
+                    <% } %>
                     <% } %>
                 <td>
+                    <input type="hidden" name="database" value="<%= req.query.database %>" />
+                    <input type="hidden" name="table" value="<%= req.query.table %>" />
                     <button type="submit" class="btn btn-default btn-xs" name="insert" value="1">Insert</button></td>
                 </tr>
             </form>
@@ -39,11 +45,12 @@
               <tr>
                   <% for (let j = 0; j < columns.length; ++j) { %>
                 <td>
-                    <input type="text" class="form-control input-sm" name="<%= columns[i] %>" value="<%= rows[i][columns[j]] %>" /></td>
+                    <input type="text" class="form-control input-sm" name="<%= columns[j].Field %>" value="<%= rows[i][columns[j].Field] %>" /></td>
                   <% } %>
               <td>
-                  <input type="hidden" name="key" value="<%= keys[0] %>" />
-                  <input type="hidden" name="value" value="<%= rows[i][keys[0]] %>" />
+                  <input type="hidden" name="database" value="<%= req.query.database %>" />
+                  <input type="hidden" name="table" value="<%= req.query.table %>" />
+                  <input type="hidden" name="key" value="<%= rows[i][key] %>" />
                   <button type="submit" class="btn btn-default btn-xs" name="update" value="1">Update</button>
                   <button type="submit" class="btn btn-default btn-xs" name="delete" value="1">Delete</button>
               </td>

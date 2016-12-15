@@ -4,14 +4,14 @@
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "develop_waspp_000"
+		"database": "mysql"
 	},
 	"db001": {
 		"connectionLimit" : 5,
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "develop_waspp_001"
+		"database": "mysql"
 	},
 	"rd000": {
 		"host": "localhost",

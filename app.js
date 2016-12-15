@@ -10,6 +10,7 @@ let bodyParser = require('body-parser')
 let app = express()
 
 // view engine setup
+pp.set('trust proxy', 1) // trust first proxy 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
@@ -17,6 +18,10 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', require('./routes/index'))

@@ -10,7 +10,7 @@ let bodyParser = require('body-parser')
 let app = express()
 
 // view engine setup
-pp.set('trust proxy', 1) // trust first proxy 
+app.set('trust proxy', 1) // trust first proxy 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 

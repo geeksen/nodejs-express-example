@@ -1,11 +1,14 @@
 
+'use strict'
+
 let express = require('express')
 let path = require('path')
 
 let logger = require('morgan')
 
-let cookieParser = require('cookie-parser')
 let bodyParser = require('body-parser')
+let cookieParser = require('cookie-parser')
+let cookieSession = require('cookie-session')
 
 let app = express()
 

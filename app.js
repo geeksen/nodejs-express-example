@@ -12,6 +12,16 @@ let cookieSession = require('cookie-session')
 
 let app = express()
 
+//let logsDir = path.join(__dirname, 'logs')
+let logsDir = './logs/'
+fs.existsSync(logsDir) || fs.mkdirSync(logsDir)
+
+let logStream = FileStreamRotator.getStream({
+  filename: logsDir + 'app.log',
+  frequency: '1h',
+  verbose: false
+})
+
 // view engine setup
 app.set('trust proxy', 1) // trust first proxy 
 app.set('views', path.join(__dirname, 'views'))
@@ -26,6 +36,10 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(logger('combined', {
+  skip: function (req, res) { return res.statusCode < 400 },
+  stream: logStream
+}))
 
 app.use('/', require('./routes/index'))
 app.use('/admin', require('./routes/admin'))

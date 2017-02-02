@@ -1,8 +1,10 @@
 
 'use strict'
 
-let express = require('express')
+let fs = require('fs')
 let path = require('path')
+let express = require('express')
+let FileStreamRotator = require('file-stream-rotator')
 
 let logger = require('morgan')
 
@@ -11,6 +13,16 @@ let cookieParser = require('cookie-parser')
 let cookieSession = require('cookie-session')
 
 let app = express()
+
+//let logsDir = path.join(__dirname, 'logs')
+let logsDir = './logs/'
+fs.existsSync(logsDir) || fs.mkdirSync(logsDir)
+
+let logStream = FileStreamRotator.getStream({
+  filename: logsDir + 'app.log',
+  frequency: '1h',
+  verbose: false
+})
 
 // view engine setup
 app.set('trust proxy', 1) // trust first proxy 
@@ -26,6 +38,10 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(logger('combined', {
+  skip: function (req, res) { return res.statusCode < 400 },
+  stream: logStream
+}))
 
 app.use('/', require('./routes/index'))
 app.use('/admin', require('./routes/admin'))

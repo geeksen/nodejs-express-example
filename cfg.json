@@ -4,7 +4,7 @@
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "mysql",
+		"database": "db000",
 		"dateStrings": "date"
 	},
 	"db001": {
@@ -12,7 +12,7 @@
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "mysql",
+		"database": "db001",
 		"dateStrings": "date"
 	},
 	"rd000": {

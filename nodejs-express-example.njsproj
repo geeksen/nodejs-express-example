@@ -36,6 +36,7 @@
     <Compile Include="routes\admin.js" />
     <Content Include="bin\www" />
     <Content Include="cfg.json" />
+    <Content Include="createDbTables.sql" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="views\admin\login.ejs" />

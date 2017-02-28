@@ -35,12 +35,12 @@
 
     <div class="container">
 
-        <form class="form-signin">
+        <form class="form-signin" method="post" action="/admin/post">
             <h2 class="form-signin-heading">Please login</h2>
-            <label for="inputUserName" class="sr-only">User Name</label>
-            <input type="username" id="inputUserName" class="form-control" placeholder="User Name" required autofocus>
+            <label for="inputAdminId" class="sr-only">Admin Id</label>
+            <input type="text" name="admin_id" id="inputAdminId" class="form-control" placeholder="Admin Id" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <input type="password" name="passwd" id="inputPassword" class="form-control" placeholder="Password" required>
 
             <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
         </form>

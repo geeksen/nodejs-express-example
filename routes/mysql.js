@@ -5,6 +5,10 @@ let express = require('express')
 let router = express.Router()
 
 router.get('/show_databases', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function showDatabases (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -20,10 +24,18 @@ router.get('/show_databases', function (req, res, next) {
 })
 
 router.get('/database_form', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   return res.render('mysql/database_form', { req: req })
 })
 
 router.post('/create_database', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   if (req.body.database_name === '') {
     return res.render('message', { message: 'database_name is required' })
   }
@@ -43,6 +55,10 @@ router.post('/create_database', function (req, res, next) {
 })
 
 router.post('/drop_database', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function dropDatabase (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -58,6 +74,10 @@ router.post('/drop_database', function (req, res, next) {
 })
 
 router.get('/show_tables', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function showTables (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -73,10 +93,18 @@ router.get('/show_tables', function (req, res, next) {
 })
 
 router.get('/table_form', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   return res.render('mysql/table_form', { req: req })
 })
 
 router.post('/columns_form', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   if (req.body.table_name === '') {
     return res.render('message', { message: 'table_name is required' })
   }
@@ -110,6 +138,10 @@ router.post('/columns_form', function (req, res, next) {
 })
 
 router.post('/create_table', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   if (req.body.name.length === 0) {
     return res.render('message', { message: 'columns are required' })
   }
@@ -187,6 +219,10 @@ router.post('/create_table', function (req, res, next) {
 })
 
 router.post('/rename_table', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function renameTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -202,6 +238,10 @@ router.post('/rename_table', function (req, res, next) {
 })
 
 router.post('/drop_table', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function dropTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -217,6 +257,10 @@ router.post('/drop_table', function (req, res, next) {
 })
 
 router.get('/desc_table', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -232,6 +276,10 @@ router.get('/desc_table', function (req, res, next) {
 })
 
 router.get('/alter_form', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -247,6 +295,10 @@ router.get('/alter_form', function (req, res, next) {
 })
 
 router.all('/alter_table', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   let database = ''
   let table = ''
   let sql = 'ALTER TABLE `'
@@ -304,6 +356,10 @@ router.all('/alter_table', function (req, res, next) {
 })
 
 router.get('/select_limit', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -334,10 +390,18 @@ router.get('/select_limit', function (req, res, next) {
 })
 
 router.get('/select_form', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   return res.render('mysql/select_form', { req: req })
 })
 
 router.get('/select_where', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }
@@ -366,6 +430,10 @@ router.get('/select_where', function (req, res, next) {
 })
 
 router.post('/execute', function (req, res, next) {
+  if (!req.session || !req.session.admin_id) {
+    return res.redirect('/admin/login')
+  }
+
   req.app.get('db000').getConnection(
     function descTable (err, dbConn) {
       if (err) { return res.send(err.message) }

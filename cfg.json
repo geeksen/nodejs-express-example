@@ -4,14 +4,16 @@
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "mysql"
+		"database": "mysql",
+		"dateStrings": "date"
 	},
 	"db001": {
 		"connectionLimit" : 5,
 		"host": "localhost",
 		"user": "root",
 		"password": "123456",
-		"database": "mysql"
+		"database": "mysql",
+		"dateStrings": "date"
 	},
 	"rd000": {
 		"host": "localhost",

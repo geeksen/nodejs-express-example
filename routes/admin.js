@@ -17,7 +17,7 @@ router.get('/login', function (req, res, next) {
     function selectAccess (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ?', [remoteAddr],
+      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
         function doResponse (err, rows, fields) {
           dbConn.release()
           if (err) { return res.send(err.message) }
@@ -28,7 +28,7 @@ router.get('/login', function (req, res, next) {
     })
 })
 
-router.post('/post', function (req, res, next) {
+router.post('/auth', function (req, res, next) {
   let remoteAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   let remoteAddrs = remoteAddr.split(':')[3].split('.')
   let adminId = req.body.admin_id
@@ -47,12 +47,12 @@ router.post('/post', function (req, res, next) {
     function selectAccess (err, dbConn) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ?', [remoteAddr],
+      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
         function selectAdmin (err, rows, fields) {
           if (err) { return res.send(err.message) }
           if (rows.length === 0) { return res.send('access denied') }
 
-          dbConn.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ?', [adminId, passwd],
+          dbConn.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [adminId, passwd, 'N'],
             function doResponse (err, rows, fields) {
               dbConn.release()
               if (err) { return res.send(err.message) }

@@ -49,8 +49,7 @@ router.post('/auth', function (req, res, next) {
           if (err) { return res.send(err.message) }
           if (rows.length === 0) { return res.render('message', { message: 'access denied' }) }
 
-
-          dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, md5(md5(passwd)), 'N'],
+          dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, md5(md5(req.body.passwd)), 'N'],
             function doResponse (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }

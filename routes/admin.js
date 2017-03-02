@@ -14,14 +14,14 @@ router.get('/login', function (req, res, next) {
   remoteAddr = remoteAddrs.join('.')
 
   req.app.get('db000').getConnection(
-    function selectAccess (err, dbConn) {
+    function selectAccess (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
+      dbConnShard.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
         function doResponse (err, rows, fields) {
-          dbConn.release()
+          dbConnShard.release()
           if (err) { return res.send(err.message) }
-          if (rows.length === 0) { return res.send('access denied') }
+          if (rows.length === 0) { return res.render('message', { message: 'access denied' }) }
 
           return res.render('admin/login', { req: req })
         })
@@ -31,34 +31,32 @@ router.get('/login', function (req, res, next) {
 router.post('/auth', function (req, res, next) {
   let remoteAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   let remoteAddrs = remoteAddr.split(':')[3].split('.')
-  let adminId = req.body.admin_id
-  let passwd = req.body.passwd
 
   remoteAddrs.pop()
   remoteAddrs.push('*')
   remoteAddr = remoteAddrs.join('.')
 
-  if (!adminId || !passwd) {
-    return res.send('admin_id and passwd required')
+  if (!req.body.admin_id || !req.body.passwd) {
+    return res.render('message', { message: 'admin_id and passwd required' })
   }
-  passwd = md5(md5(passwd))
 
   req.app.get('db000').getConnection(
-    function selectAccess (err, dbConn) {
+    function selectAccess (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
-      dbConn.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
+      dbConnShard.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
         function selectAdmin (err, rows, fields) {
           if (err) { return res.send(err.message) }
-          if (rows.length === 0) { return res.send('access denied') }
+          if (rows.length === 0) { return res.render('message', { message: 'access denied' }) }
 
-          dbConn.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [adminId, passwd, 'N'],
+
+          dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, md5(md5(passwd)), 'N'],
             function doResponse (err, rows, fields) {
-              dbConn.release()
+              dbConnShard.release()
               if (err) { return res.send(err.message) }
-              if (rows.length === 0) { return res.send('login failed') }
+              if (rows.length === 0) { return res.render('message', { message: 'login failed' }) }
 
-              req.session.admin_id = adminId
+              req.session.admin_id = req.body.admin_id
               return res.redirect('/')
             })
         })

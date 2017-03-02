@@ -14,7 +14,7 @@ CREATE TABLE `access` (
   PRIMARY KEY (`ip_addr`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `access` VALUES ('1.1.1.*', 'HOME', 'N', 'steve', NOW(), NOW());
+INSERT INTO `access` VALUES ('1.1.1.*', 'HOME', 'N', 'steve', NOW(), '1970-01-01 00:00:00');
 
 CREATE TABLE `admin` (
   `admin_id` VARCHAR(64) NOT NULL,
@@ -26,4 +26,4 @@ CREATE TABLE `admin` (
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `admin` VALUES ('steve', 'd541bcab84d9478c22c4a4cf1ec0ab95', 'N', 'steve', NOW(), NOW());
+INSERT INTO `admin` VALUES ('steve', 'd541bcab84d9478c22c4a4cf1ec0ab95', 'N', 'steve', NOW(), '1970-01-01 00:00:00');

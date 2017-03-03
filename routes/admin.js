@@ -14,11 +14,11 @@ router.get('/login', function (req, res, next) {
   remoteAddr = remoteAddrs.join('.')
 
   req.app.get('db000').getConnection(
-    function selectAccess (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
           if (rows.length === 0) { return res.render('message', { message: 'access denied' }) }
@@ -41,16 +41,16 @@ router.post('/auth', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function selectAccess (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('SELECT ip_addr FROM access WHERE ip_addr = ? AND is_deleted = ?', [remoteAddr, 'N'],
-        function selectAdmin (err, rows, fields) {
+        function (err, rows, fields) {
           if (err) { return res.send(err.message) }
           if (rows.length === 0) { return res.render('message', { message: 'access denied' }) }
 
           dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, md5(md5(req.body.passwd)), 'N'],
-            function doResponse (err, rows, fields) {
+            function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
               if (rows.length === 0) { return res.render('message', { message: 'login failed' }) }

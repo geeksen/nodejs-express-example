@@ -10,11 +10,11 @@ router.get('/show_databases', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function showDatabases (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('SHOW DATABASES',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -41,11 +41,11 @@ router.post('/create_database', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function createDatabase (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
-        function doResponse (err, result) {
+        function (err, result) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -60,11 +60,11 @@ router.post('/drop_database', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function dropDatabase (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DROP DATABASE `' + req.body.database + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -79,11 +79,11 @@ router.get('/show_tables', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function showTables (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('SHOW TABLES IN `' + req.query.database + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -118,11 +118,11 @@ router.post('/columns_form', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function showTables (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('SHOW TABLES IN `' + req.body.database + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -159,7 +159,7 @@ router.post('/create_table', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function createTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       let columnsAndIndexes = []
@@ -209,7 +209,7 @@ router.post('/create_table', function (req, res, next) {
       }
 
       dbConnShard.query(sql,
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -224,11 +224,11 @@ router.post('/rename_table', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function renameTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('RENAME TABLE `' + req.body.database + '`.`' + req.body.table_name + '` TO `' + req.body.database + '`.`' + req.body.new_table_name + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -243,11 +243,11 @@ router.post('/drop_table', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function dropTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DROP TABLE `' + req.body.database + '`.`' + req.body.table + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -262,11 +262,11 @@ router.get('/desc_table', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function descTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -281,11 +281,11 @@ router.get('/alter_form', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function descTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -342,11 +342,11 @@ router.all('/alter_table', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function alterTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query(sql,
-        function doResponse (err, rows, fields) {
+        function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
@@ -361,11 +361,11 @@ router.get('/select_limit', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function descTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function selectLimit (err, columns, fields) {
+        function (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
           let key = ''
@@ -379,7 +379,7 @@ router.get('/select_limit', function (req, res, next) {
           let offset = parseInt(req.query.offset)
           let rowCount = parseInt(req.query.row_count)
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [offset, rowCount],
-            function doResponse (err, rows, fields) {
+            function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
 
@@ -403,11 +403,11 @@ router.get('/select_where', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function descTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
-        function selectWhere (err, columns, fields) {
+        function (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
           let key = ''
@@ -419,7 +419,7 @@ router.get('/select_where', function (req, res, next) {
           }
 
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
-            function doResponse (err, rows, fields) {
+            function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
 
@@ -435,11 +435,11 @@ router.post('/execute', function (req, res, next) {
   }
 
   req.app.get('db000').getConnection(
-    function descTable (err, dbConnShard) {
+    function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
       dbConnShard.query('DESC `' + req.body.database + '`.`' + req.body.table + '`',
-        function execute (err, columns, fields) {
+        function (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
           let key = ''
@@ -491,7 +491,7 @@ router.post('/execute', function (req, res, next) {
           // return res.send(sql)
 
           dbConnShard.query(sql, values,
-            function doResponse (err, rows, fields) {
+            function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
 

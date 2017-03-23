@@ -162,53 +162,53 @@ router.post('/create_table', function (req, res, next) {
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
-      let columnsAndIndexes = []
-      let primaryKeys = []
-      let uniqueKeys = []
-      let keys = []
-      let autoIncrements = []
+      let aColumnsAndIndexes = []
+      let aPrimaryKeys = []
+      let aUniqueKeys = []
+      let aKeys = []
+      let aAutoIncrements = []
 
       for (let i = 0; i < req.body.name.length; ++i) {
-        columnsAndIndexes.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL ' + req.body.auto_increment[i])
+        aColumnsAndIndexes.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL ' + req.body.auto_increment[i])
 
         if (req.body.index[i] === 'PRIMARY') {
-          primaryKeys.push('`' + req.body.name[i] + '`')
+          aPrimaryKeys.push('`' + req.body.name[i] + '`')
         } else if (req.body.index[i] === 'UNIQUE') {
-          uniqueKeys.push('`' + req.body.name[i] + '`')
+          aUniqueKeys.push('`' + req.body.name[i] + '`')
         } else if (req.body.index[i] === 'INDEX') {
-          keys.push('`' + req.body.name[i] + '`')
+          aKeys.push('`' + req.body.name[i] + '`')
         }
 
         if (req.body.auto_increment[i] === 'AUTO_INCREMENT') {
-          autoIncrements.push(req.body.auto_increment[i])
+          aAutoIncrements.push(req.body.auto_increment[i])
         }
       }
 
-      if (primaryKeys.length > 0) {
-        columnsAndIndexes.push('PRIMARY KEY (' + primaryKeys.join(',') + ')')
+      if (aPrimaryKeys.length > 0) {
+        aColumnsAndIndexes.push('PRIMARY KEY (' + aPrimaryKeys.join(',') + ')')
       }
 
-      if (uniqueKeys.length > 0) {
-        columnsAndIndexes.push('UNIQUE KEY ' + uniqueKeys[0] + ' (' + uniqueKeys.join(',') + ')')
+      if (aUniqueKeys.length > 0) {
+        aColumnsAndIndexes.push('UNIQUE KEY ' + aUniqueKeys[0] + ' (' + aUniqueKeys.join(',') + ')')
       }
 
-      if (keys.length > 0) {
-        columnsAndIndexes.push('KEY ' + keys[0] + ' (' + keys.join(',') + ')')
+      if (aKeys.length > 0) {
+        aColumnsAndIndexes.push('KEY ' + aKeys[0] + ' (' + aKeys.join(',') + ')')
       }
 
-      if (autoIncrements.length > 1) {
+      if (aAutoIncrements.length > 1) {
         return res.render('message', { message: 'too many auto_increments' })
       }
 
-      let sql = 'CREATE TABLE IF NOT EXISTS `' + req.body.database + '`.`' + req.body.table_name + '` ('
-      sql += columnsAndIndexes.join(',\n')
-      sql += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8'
+      let sQuery = 'CREATE TABLE IF NOT EXISTS `' + req.body.database + '`.`' + req.body.table_name + '` ('
+      sQuery += aColumnsAndIndexes.join(',\n')
+      sQuery += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8'
 
-      if (autoIncrements.length > 0) {
-        sql += ' AUTO_INCREMENT=1'
+      if (aAutoIncrements.length > 0) {
+        sQuery += ' AUTO_INCREMENT=1'
       }
 
-      dbConnShard.query(sql,
+      dbConnShard.query(sQuery,
         function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
@@ -299,58 +299,58 @@ router.all('/alter_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let database = ''
-  let table = ''
-  let sql = 'ALTER TABLE `'
+  let sDatabase = ''
+  let sTable = ''
+  let sQuery = 'ALTER TABLE `'
 
   if (req.query.add_primary === '1') {
-    database = req.query.database
-    table = req.query.table
-    sql += req.query.database + '`.`' + req.query.table + '` ADD PRIMARY KEY(`' + req.query.field + '`)'
+    sDatabase = req.query.database
+    sTable = req.query.table
+    sQuery += req.query.database + '`.`' + req.query.table + '` ADD PRIMARY KEY(`' + req.query.field + '`)'
   } else if (req.query.drop_primary === '1') {
-    database = req.query.database
-    table = req.query.table
-    sql += req.query.database + '`.`' + req.query.table + '` DROP PRIMARY KEY'
+    sDatabase = req.query.database
+    sTable = req.query.table
+    sQuery += req.query.database + '`.`' + req.query.table + '` DROP PRIMARY KEY'
   } else if (req.query.add_unique === '1') {
-    database = req.query.database
-    table = req.query.table
-    sql += req.query.database + '`.`' + req.query.table + '` ADD UNIQUE KEY(`' + req.query.field + '`)'
+    sDatabase = req.query.database
+    sTable = req.query.table
+    sQuery += req.query.database + '`.`' + req.query.table + '` ADD UNIQUE KEY(`' + req.query.field + '`)'
   } else if (req.query.add_index === '1') {
-    database = req.query.database
-    table = req.query.table
-    sql += req.query.database + '`.`' + req.query.table + '` ADD INDEX(`' + req.query.field + '`)'
+    sDatabase = req.query.database
+    sTable = req.query.table
+    sQuery += req.query.database + '`.`' + req.query.table + '` ADD INDEX(`' + req.query.field + '`)'
   } else if (req.query.drop_index === '1') {
-    database = req.query.database
-    table = req.query.table
-    sql += req.query.database + '`.`' + req.query.table + '` DROP INDEX `' + req.query.field + '`'
+    sDatabase = req.query.database
+    sTable = req.query.table
+    sQuery += req.query.database + '`.`' + req.query.table + '` DROP INDEX `' + req.query.field + '`'
   } else if (req.body.add_first === '1') {
-    database = req.body.database
-    table = req.body.table
-    sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL FIRST'
+    sDatabase = req.body.database
+    sTable = req.body.table
+    sQuery += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL FIRST'
   } else if (req.body.add_after === '1') {
-    database = req.body.database
-    table = req.body.table
-    sql += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL AFTER `' + req.body.field + '`'
+    sDatabase = req.body.database
+    sTable = req.body.table
+    sQuery += req.body.database + '`.`' + req.body.table + '` ADD `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL AFTER `' + req.body.field + '`'
   } else if (req.body.change_column === '1') {
-    database = req.body.database
-    table = req.body.table
-    sql += req.body.database + '`.`' + req.body.table + '` CHANGE `' + req.body.field + '` `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL'
+    sDatabase = req.body.database
+    sTable = req.body.table
+    sQuery += req.body.database + '`.`' + req.body.table + '` CHANGE `' + req.body.field + '` `' + req.body.new_name + '` ' + req.body.new_type + ' NOT NULL'
   } else if (req.body.drop_column === '1') {
-    database = req.body.database
-    table = req.body.table
-    sql += req.body.database + '`.`' + req.body.table + '` DROP `' + req.body.field + '`'
+    sDatabase = req.body.database
+    sTable = req.body.table
+    sQuery += req.body.database + '`.`' + req.body.table + '` DROP `' + req.body.field + '`'
   }
 
   req.app.get('db000').getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
-      dbConnShard.query(sql,
+      dbConnShard.query(sQuery,
         function (err, rows, fields) {
           dbConnShard.release()
           if (err) { return res.send(err.message) }
 
-          return res.redirect('/mysql/alter_form?database=' + database + '&table=' + table)
+          return res.redirect('/mysql/alter_form?database=' + sDatabase + '&table=' + sTable)
         })
     })
 })
@@ -376,9 +376,9 @@ router.get('/select_limit', function (req, res, next) {
             }
           }
 
-          let offset = parseInt(req.query.offset)
-          let rowCount = parseInt(req.query.row_count)
-          dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [offset, rowCount],
+          let iOffset = parseInt(req.query.offset)
+          let iRowCount = parseInt(req.query.row_count)
+          dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [iOffset, iRowCount],
             function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
@@ -410,10 +410,10 @@ router.get('/select_where', function (req, res, next) {
         function (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
-          let key = ''
+          let sKey = ''
           for (let i = 0; i < columns.length; ++i) {
             if (columns[i].Key === 'PRI') {
-              key = columns[i].Field
+              sKey = columns[i].Field
               break
             }
           }
@@ -423,7 +423,7 @@ router.get('/select_where', function (req, res, next) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }
 
-              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: key })
+              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: sKey })
             })
         })
     })
@@ -442,55 +442,55 @@ router.post('/execute', function (req, res, next) {
         function (err, columns, fields) {
           if (err) { return res.send(err.message) }
 
-          let key = ''
-          let insertColumns = []
-          let params = []
-          let values = []
-          let sql = ''
+          let sKey = ''
+          let aInsertColumns = []
+          let aParams = []
+          let aValues = []
+          let sQuery = ''
 
           if (req.body.insert === '1') {
             for (let i = 0; i < columns.length; ++i) {
               if (columns[i].Key === 'PRI') {
-                key = columns[i].Field
+                sKey = columns[i].Field
               }
 
               if (columns[i].Extra === 'auto_increment') {
                 continue
               }
 
-              insertColumns.push(columns[i].Field)
-              params.push('?')
-              values.push(req.body[columns[i].Field])
+              aInsertColumns.push(columns[i].Field)
+              aParams.push('?')
+              aValues.push(req.body[columns[i].Field])
             }
 
-            sql += 'INSERT INTO `' + req.body.database + '`.`' + req.body.table + '`(`' + insertColumns.join('`, `') + '`) VALUES(' + params.join(', ') + ')'
+            sQuery += 'INSERT INTO `' + req.body.database + '`.`' + req.body.table + '`(`' + aInsertColumns.join('`, `') + '`) VALUES(' + aParams.join(', ') + ')'
           } else if (req.body.update === '1') {
             for (let i = 0; i < columns.length; ++i) {
               if (columns[i].Key === 'PRI') {
-                key = columns[i].Field
+                sKey = columns[i].Field
               }
 
-              params.push('`' + columns[i].Field + '` = ?')
-              values.push(req.body[columns[i].Field])
+              aParams.push('`' + columns[i].Field + '` = ?')
+              aValues.push(req.body[columns[i].Field])
             }
-            values.push(req.body[key])
+            aValues.push(req.body[sKey])
 
-            sql += 'UPDATE `' + req.body.database + '`.`' + req.body.table + '` SET ' + params.join(', ') + ' WHERE `' + key + '` = ?'
+            sQuery += 'UPDATE `' + req.body.database + '`.`' + req.body.table + '` SET ' + aParams.join(', ') + ' WHERE `' + sKey + '` = ?'
           } else if (req.body.delete === '1') {
             for (let i = 0; i < columns.length; ++i) {
               if (columns[i].Key === 'PRI') {
-                key = columns[i].Field
+                sKey = columns[i].Field
                 break
               }
             }
-            values.push(req.body[key])
+            aValues.push(req.body[sKey])
 
-            sql += 'DELETE FROM `' + req.body.database + '`.`' + req.body.table + '` WHERE `' + key + '` = ?'
+            sQuery += 'DELETE FROM `' + req.body.database + '`.`' + req.body.table + '` WHERE `' + sKey + '` = ?'
           }
 
-          // return res.send(sql)
+          // return res.send(sQuery)
 
-          dbConnShard.query(sql, values,
+          dbConnShard.query(sQuery, aValues,
             function (err, rows, fields) {
               dbConnShard.release()
               if (err) { return res.send(err.message) }

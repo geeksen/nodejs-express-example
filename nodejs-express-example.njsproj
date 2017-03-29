@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="libs\shard.js" />
     <Compile Include="routes\mysql.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\admin.js" />
@@ -58,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
+    <Folder Include="libs\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
     <Folder Include="views\admin\" />

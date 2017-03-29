@@ -1,30 +1,33 @@
 {
-	"db000": {
-		"connectionLimit" : 5,
-		"host": "localhost",
-		"user": "root",
-		"password": "123456",
-		"database": "db000",
-		"dateStrings": "date"
-	},
-	"db001": {
-		"connectionLimit" : 5,
-		"host": "localhost",
-		"user": "root",
-		"password": "123456",
-		"database": "db001",
-		"dateStrings": "date"
-	},
-	"rd000": {
-		"host": "localhost",
-		"port": 6379
-	},
-	"rd001": {
-		"host": "localhost",
-		"port": 6379
-	},
-	"server": {
-		"port": 3000
-	},
-	"//end": 0
+  "shard": {
+    "count": 1
+  },
+  "db000": {
+    "connectionLimit": 5,
+    "host": "localhost",
+    "user": "root",
+    "password": "123456",
+    "database": "db000",
+    "dateStrings": "date"
+  },
+  "db001": {
+    "connectionLimit": 5,
+    "host": "localhost",
+    "user": "root",
+    "password": "123456",
+    "database": "db001",
+    "dateStrings": "date"
+  },
+  "rd000": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "rd001": {
+    "host": "localhost",
+    "port": 6379
+  },
+  "server": {
+    "port": 3000
+  },
+  "//end": 0
 }

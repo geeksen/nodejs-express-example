@@ -56,6 +56,8 @@ router.post('/auth', function (req, res, next) {
               if (rows.length === 0) { return res.render('message', { message: 'login failed' }) }
 
               req.session.admin_id = req.body.admin_id
+              req.session.shard_key_num_for_test = 0
+              req.session.shard_key_str_for_test = 0
               return res.redirect('/')
             })
         })

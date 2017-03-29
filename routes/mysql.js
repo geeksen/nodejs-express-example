@@ -4,12 +4,14 @@
 let express = require('express')
 let router = express.Router()
 
+let Shard = require('../libs/shard')
+
 router.get('/show_databases', function (req, res, next) {
   if (!req.session || !req.session.admin_id) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -40,7 +42,7 @@ router.post('/create_database', function (req, res, next) {
     return res.render('message', { message: 'database_name is required' })
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -59,7 +61,7 @@ router.post('/drop_database', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -78,7 +80,7 @@ router.get('/show_tables', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -117,7 +119,7 @@ router.post('/columns_form', function (req, res, next) {
     return res.render('message', { message: 'num_of_columns is required' })
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -158,7 +160,7 @@ router.post('/create_table', function (req, res, next) {
     return res.render('message', { message: 'number of auto_increments is not matched' })
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -223,7 +225,7 @@ router.post('/rename_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -242,7 +244,7 @@ router.post('/drop_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -261,7 +263,7 @@ router.get('/desc_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -280,7 +282,7 @@ router.get('/alter_form', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -341,7 +343,7 @@ router.all('/alter_table', function (req, res, next) {
     sQuery += req.body.database + '`.`' + req.body.table + '` DROP `' + req.body.field + '`'
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -360,7 +362,7 @@ router.get('/select_limit', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -402,7 +404,7 @@ router.get('/select_where', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
@@ -434,7 +436,7 @@ router.post('/execute', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  req.app.get('db000').getConnection(
+  req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 

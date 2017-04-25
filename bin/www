@@ -17,8 +17,8 @@ app.set('cfg', cfg)
  * Get port from environment and store in Express.
  */
 
-let sPort = cfg.server.port // normalizePort(process.env.PORT || '3000')
-app.set('port', sPort)
+let port = cfg.server.port // normalizePort(process.env.PORT || '3000')
+app.set('port', port)
 
 let mysql = require('mysql')
 let db000 = mysql.createPool(cfg.db000)
@@ -44,7 +44,7 @@ let server = http.createServer(app)
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(sPort)
+server.listen(port)
 server.on('error', onError)
 server.on('listening', onListening)
 
@@ -80,8 +80,8 @@ function onError (error) {
   }
 
   let sBind = typeof port === 'string'
-    ? 'Pipe ' + sPort
-    : 'Port ' + sPort
+    ? 'Pipe ' + port
+    : 'Port ' + port
 
   // handle specific listen errors with friendly messages
   switch (error.code) {

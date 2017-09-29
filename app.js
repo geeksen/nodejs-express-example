@@ -12,7 +12,7 @@ let cookieSession = require('cookie-session')
 
 express.response.releaseRedirect = function (dbConn, url) {
   if (url === undefined) {
-    return this.send('url undefined')
+    return this.send('releaseRedirect : not enough params')
   }
 
   dbConn.release()
@@ -20,8 +20,8 @@ express.response.releaseRedirect = function (dbConn, url) {
 }
 
 express.response.releaseRender = function (dbConn, view, data) {
-  if (data === undefined) {
-    return this.send('data undefined')
+  if (view === undefine || data === undefined) {
+    return this.send('releaseRender : not enough params')
   }
 
   dbConn.release()
@@ -30,7 +30,7 @@ express.response.releaseRender = function (dbConn, view, data) {
 
 express.response.releaseSend = function (dbConn, message) {
   if (message === undefined) {
-    return this.send('message undefined')
+    return this.send('releaseSend : not enough params')
   }
 
   dbConn.release()

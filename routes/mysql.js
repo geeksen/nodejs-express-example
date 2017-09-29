@@ -17,10 +17,9 @@ router.get('/show_databases', function (req, res, next) {
 
       dbConnShard.query('SHOW DATABASES',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.render('mysql/show_databases', { req: req, rows: rows })
+          return res.releaseRender(dbConnShard, 'mysql/show_databases', { req: req, rows: rows })
         })
     })
 })
@@ -48,10 +47,9 @@ router.post('/create_database', function (req, res, next) {
 
       dbConnShard.query('CREATE DATABASE IF NOT EXISTS `' + req.body.database_name + '` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci',
         function (err, result) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/show_databases')
+          return res.releaseRedirect(dbConnShard, '/mysql/show_databases')
         })
     })
 })
@@ -67,10 +65,9 @@ router.post('/drop_database', function (req, res, next) {
 
       dbConnShard.query('DROP DATABASE `' + req.body.database + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/show_databases')
+          return res.releaseRedirect(dbConnShard, '/mysql/show_databases')
         })
     })
 })
@@ -86,10 +83,9 @@ router.get('/show_tables', function (req, res, next) {
 
       dbConnShard.query('SHOW TABLES IN `' + req.query.database + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.render('mysql/show_tables', { req: req, rows: rows })
+          return res.releaseRender(dbConnShard, 'mysql/show_tables', { req: req, rows: rows })
         })
     })
 })
@@ -125,16 +121,15 @@ router.post('/columns_form', function (req, res, next) {
 
       dbConnShard.query('SHOW TABLES IN `' + req.body.database + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
           for (let i = 0; i < rows.length; ++i) {
             if (req.body.table_name === rows[i]['Tables_in_' + req.body.database]) {
-              return res.render('message', { message: 'table already exists' })
+              return res.releaseRender(dbConnShard, 'message', { message: 'table already exists' })
             }
           }
 
-          return res.render('mysql/columns_form', { req: req })
+          return res.releaseRender(dbConnShard, 'mysql/columns_form', { req: req })
         })
     })
 })
@@ -212,10 +207,9 @@ router.post('/create_table', function (req, res, next) {
 
       dbConnShard.query(sQuery,
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/show_tables?database=' + req.body.database)
+          return res.releaseRedirect(dbConnShard, '/mysql/show_tables?database=' + req.body.database)
         })
     })
 })
@@ -231,10 +225,9 @@ router.post('/rename_table', function (req, res, next) {
 
       dbConnShard.query('RENAME TABLE `' + req.body.database + '`.`' + req.body.table_name + '` TO `' + req.body.database + '`.`' + req.body.new_table_name + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/show_tables?database=' + req.body.database)
+          return res.releaseRedirect(dbConnShard, '/mysql/show_tables?database=' + req.body.database)
         })
     })
 })
@@ -250,10 +243,9 @@ router.post('/drop_table', function (req, res, next) {
 
       dbConnShard.query('DROP TABLE `' + req.body.database + '`.`' + req.body.table + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/show_tables?database=' + req.body.database)
+          return res.releaseRedirect(dbConnShard, '/mysql/show_tables?database=' + req.body.database)
         })
     })
 })
@@ -269,10 +261,9 @@ router.get('/desc_table', function (req, res, next) {
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.render('mysql/desc_table', { req: req, rows: rows })
+          return res.releaseRender(dbConnShard, 'mysql/desc_table', { req: req, rows: rows })
         })
     })
 })
@@ -288,10 +279,9 @@ router.get('/alter_form', function (req, res, next) {
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.render('mysql/alter_form', { req: req, rows: rows })
+          return res.releaseRender(dbConnShard, 'mysql/alter_form', { req: req, rows: rows })
         })
     })
 })
@@ -349,10 +339,9 @@ router.all('/alter_table', function (req, res, next) {
 
       dbConnShard.query(sQuery,
         function (err, rows, fields) {
-          dbConnShard.release()
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.redirect('/mysql/alter_form?database=' + sDatabase + '&table=' + sTable)
+          return res.releaseRedirect(dbConnShard, '/mysql/alter_form?database=' + sDatabase + '&table=' + sTable)
         })
     })
 })
@@ -368,7 +357,7 @@ router.get('/select_limit', function (req, res, next) {
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, columns, fields) {
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
           let key = ''
           for (let i = 0; i < columns.length; ++i) {
@@ -382,10 +371,9 @@ router.get('/select_limit', function (req, res, next) {
           let iRowCount = parseInt(req.query.row_count)
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [iOffset, iRowCount],
             function (err, rows, fields) {
-              dbConnShard.release()
-              if (err) { return res.send(err.message) }
+              if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: key })
+              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, columns: columns, rows: rows, key: key })
             })
         })
     })
@@ -410,7 +398,7 @@ router.get('/select_where', function (req, res, next) {
 
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, columns, fields) {
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
           let sKey = ''
           for (let i = 0; i < columns.length; ++i) {
@@ -422,10 +410,9 @@ router.get('/select_where', function (req, res, next) {
 
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
             function (err, rows, fields) {
-              dbConnShard.release()
-              if (err) { return res.send(err.message) }
+              if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.render('mysql/select_limit', { req: req, columns: columns, rows: rows, key: sKey })
+              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, columns: columns, rows: rows, key: sKey })
             })
         })
     })
@@ -442,7 +429,7 @@ router.post('/execute', function (req, res, next) {
 
       dbConnShard.query('DESC `' + req.body.database + '`.`' + req.body.table + '`',
         function (err, columns, fields) {
-          if (err) { return res.send(err.message) }
+          if (err) { return res.releaseSend(dbConnShard, err.message) }
 
           let sKey = ''
           let aInsertColumns = []
@@ -490,14 +477,13 @@ router.post('/execute', function (req, res, next) {
             sQuery += 'DELETE FROM `' + req.body.database + '`.`' + req.body.table + '` WHERE `' + sKey + '` = ?'
           }
 
-          // return res.send(sQuery)
+          // return res.releaseSend(dbConnShard, sQuery)
 
           dbConnShard.query(sQuery, aValues,
             function (err, rows, fields) {
-              dbConnShard.release()
-              if (err) { return res.send(err.message) }
+              if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.redirect('/mysql/select_limit?database=' + req.body.database + '&table=' + req.body.table + '&offset=0&row_count=10')
+              return res.releaseRedirect(dbConnShard, '/mysql/select_limit?database=' + req.body.database + '&table=' + req.body.table + '&offset=0&row_count=10')
             })
         })
     })

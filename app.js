@@ -10,6 +10,33 @@ let bodyParser = require('body-parser')
 let cookieParser = require('cookie-parser')
 let cookieSession = require('cookie-session')
 
+express.response.releaseRedirect = function (dbConn, url) {
+  if (url === undefined) {
+    return this.send('url undefined')
+  }
+
+  dbConn.release()
+  return this.redirect(url)
+}
+
+express.response.releaseRender = function (dbConn, view, data) {
+  if (data === undefined) {
+    return this.send('data undefined')
+  }
+
+  dbConn.release()
+  return this.render(view, data)
+}
+
+express.response.releaseSend = function (dbConn, message) {
+  if (message === undefined) {
+    return this.send('message undefined')
+  }
+
+  dbConn.release()
+  return this.send(message)
+}
+
 let app = express()
 
 // view engine setup

@@ -8,7 +8,7 @@
     "user": "root",
     "password": "123456",
     "database": "db000",
-    "dateStrings": "date"
+    "dateStrings": true
   },
   "db001": {
     "connectionLimit": 5,
@@ -16,7 +16,7 @@
     "user": "root",
     "password": "123456",
     "database": "db001",
-    "dateStrings": "date"
+    "dateStrings": true
   },
   "rd000": {
     "host": "localhost",

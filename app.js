@@ -38,6 +38,8 @@ express.response.releaseSend = function (dbConn, message) {
 }
 
 let app = express()
+app.disable('x-powered-by')
+
 
 // view engine setup
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])

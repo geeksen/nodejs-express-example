@@ -11,29 +11,32 @@ let cookieParser = require('cookie-parser')
 let cookieSession = require('cookie-session')
 
 express.response.releaseRedirect = function (dbConn, url) {
+  dbConn.release()
+
   if (url === undefined) {
     return this.send('releaseRedirect : not enough params')
   }
 
-  dbConn.release()
   return this.redirect(url)
 }
 
 express.response.releaseRender = function (dbConn, view, data) {
-  if (view === undefine || data === undefined) {
+  dbConn.release()
+
+  if (view === undefine) {
     return this.send('releaseRender : not enough params')
   }
 
-  dbConn.release()
   return this.render(view, data)
 }
 
 express.response.releaseSend = function (dbConn, message) {
+  dbConn.release()
+
   if (message === undefined) {
     return this.send('releaseSend : not enough params')
   }
 
-  dbConn.release()
   return this.send(message)
 }
 

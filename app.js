@@ -23,7 +23,7 @@ express.response.releaseRedirect = function (dbConn, url) {
 express.response.releaseRender = function (dbConn, view, data) {
   dbConn.release()
 
-  if (view === undefine) {
+  if (view === undefined) {
     return this.send('releaseRender : not enough params')
   }
 

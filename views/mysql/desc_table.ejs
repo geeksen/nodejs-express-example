@@ -26,18 +26,18 @@
             <th>Default</th>
             <th>Extra</th>
         </tr>
-        <% for (let i = 0; i < rows.length; ++i) { %>
+        <% for (let i = 0; i < aRows.length; ++i) { %>
           <tr>
-              <td><% if (['PRI', 'UNI'].indexOf(rows[i].Key) > -1) { %>
-                    <a href="/mysql/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=<%= rows[i].Field %>">SELECT WHERE</a>
+              <td><% if (['PRI', 'UNI'].indexOf(aRows[i].Key) > -1) { %>
+                    <a href="/mysql/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=<%= aRows[i].Field %>">SELECT WHERE</a>
                   <% } %>
               </td>
-              <td><%= rows[i].Field %></td>
-              <td><%= rows[i].Type %></td>
-              <td><%= rows[i].Null %></td>
-              <td><%= rows[i].Key %></td>
-              <td><%= rows[i].Default %></td>
-              <td><%= rows[i].Extra %></td>
+              <td><%= aRows[i].Field %></td>
+              <td><%= aRows[i].Type %></td>
+              <td><%= aRows[i].Null %></td>
+              <td><%= aRows[i].Key %></td>
+              <td><%= aRows[i].Default %></td>
+              <td><%= aRows[i].Extra %></td>
           </tr>
         <% } %>
     </table>

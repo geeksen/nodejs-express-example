@@ -45,38 +45,38 @@
                 <th>Drop</th>
             </tr>
         </form>
-        <% for (let i = 0; i < rows.length; ++i) { %>
+        <% for (let i = 0; i < aRows.length; ++i) { %>
         <form method="post" action="/mysql/alter_table">
             <tr class="small">
-                <td><%= rows[i].Field %></td>
-                <td><%= rows[i].Type %></td>
-                <td><%= rows[i].Null %></td>
-                <td><%= rows[i].Key %></td>
-                <td><%= rows[i].Default %></td>
-                <td><%= rows[i].Extra %></td>
+                <td><%= aRows[i].Field %></td>
+                <td><%= aRows[i].Type %></td>
+                <td><%= aRows[i].Null %></td>
+                <td><%= aRows[i].Key %></td>
+                <td><%= aRows[i].Default %></td>
+                <td><%= aRows[i].Extra %></td>
 
-                <% if (rows[i].Key === 'PRI') { %>
-                    <td><a href="/mysql/alter_table?drop_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
+                <% if (aRows[i].Key === 'PRI') { %>
+                    <td><a href="/mysql/alter_table?drop_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Primary</a></td>
+                    <td><a href="/mysql/alter_table?add_primary=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Primary</a></td>
                 <% } %>
 
-                <% if (rows[i].Key === 'UNI') { %>
-                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
+                <% if (aRows[i].Key === 'UNI') { %>
+                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_unique=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Unique</a></td>
+                    <td><a href="/mysql/alter_table?add_unique=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Unique</a></td>
                 <% } %>
 
-                <% if (rows[i].Key === 'MUL') { %>
-                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Drop</a></td>
+                <% if (aRows[i].Key === 'MUL') { %>
+                    <td><a href="/mysql/alter_table?drop_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Drop</a></td>
                 <% } else { %>
-                    <td><a href="/mysql/alter_table?add_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= rows[i].Field %>">Index</a></td>
+                    <td><a href="/mysql/alter_table?add_index=1&database=<%= req.query.database %>&table=<%= req.query.table %>&field=<%= aRows[i].Field %>">Index</a></td>
                 <% } %>
                 
                 <td>
                     <input type="hidden" name="database" value="<%= req.query.database %>" />
                     <input type="hidden" name="table" value="<%= req.query.table %>" />
-                    <input type="hidden" name="field" value="<%= rows[i].Field %>" />
+                    <input type="hidden" name="field" value="<%= aRows[i].Field %>" />
                     <input type="text" class="form-control input-sm" name="new_name" placeholder="New Name" /></td>
                 <td>
                     <select class="form-control input-sm" name="new_type">

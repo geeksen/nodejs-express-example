@@ -17,12 +17,12 @@
             <th>Database</th>
             <th>Drop</th>
         </tr>
-        <% for (let i = 0; i < rows.length; ++i) { %>
+        <% for (let i = 0; i < aRows.length; ++i) { %>
           <tr>
-              <td><a href="/mysql/show_tables?database=<%= rows[i].Database %>"><%= rows[i].Database %></a></td>
+              <td><a href="/mysql/show_tables?database=<%= aRows[i].Database %>"><%= aRows[i].Database %></a></td>
               <td>
                   <form class="form-drop" method="post" action="/mysql/drop_database">
-                      <input type="hidden" name="database" value="<%= rows[i].Database %>" />
+                      <input type="hidden" name="database" value="<%= aRows[i].Database %>" />
                       <button type="submit" class="btn btn-default">Drop</button>
                   </form>
               </td>

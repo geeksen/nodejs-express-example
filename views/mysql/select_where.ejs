@@ -18,11 +18,11 @@
 
     <div class="table-responsive">
         <table class="table table-bordered">
-            <% for (let i = 0; i < columns.length; ++i) { %>
+            <% for (let i = 0; i < aColumns.length; ++i) { %>
           <tr>
-              <th class="col-sm-2"><%= columns[i].Field %></th>
-              <td><% if (rows.length > 0) { %>
-                    <%= rows[0][columns[i].Field] %>
+              <th class="col-sm-2"><%= aColumns[i].Field %></th>
+              <td><% if (aRows.length > 0) { %>
+                    <%= aRows[0][aColumns[i].Field] %>
                   <% } %>
               </td>
           </tr>

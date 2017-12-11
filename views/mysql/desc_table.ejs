@@ -1,20 +1,12 @@
 ﻿<% include ../include/header %>
 
-<!-- Begin page content -->
-<div class="container">
-    <div class="page-header">
-        <h1>
-            <a href="/mysql/show_databases">Databases</a>
-            /
-            <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
-            /
-            <a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>"><%= req.query.table %></a>
-        </h1>
-    </div>
-
-    <p>
-        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10">SELECT LIMIT</a>
-    </p>
+    <h1>
+        <a href="/mysql/show_databases">Databases</a>
+        /
+        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        /
+        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+    </h1>
 
     <table class="table table-bordered">
         <tr>
@@ -41,7 +33,5 @@
           </tr>
         <% } %>
     </table>
-
-</div>
 
 <% include ../include/footer %>

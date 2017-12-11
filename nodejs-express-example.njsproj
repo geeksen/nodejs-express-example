@@ -36,6 +36,9 @@
     <Compile Include="routes\admin.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\mysql.js" />
+    <Compile Include="routes\sqlite3.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Content Include="cfg.json" />
     <Content Include="createDbTables.sql" />
     <Content Include="package.json" />

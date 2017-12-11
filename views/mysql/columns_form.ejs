@@ -1,16 +1,12 @@
 ﻿<% include ../include/header %>
 
-<!-- Begin page content -->
-<div class="container">
-    <div class="page-header">
-        <h1>
-            <a href="/mysql/show_databases">Databases</a>
-            /
-            <a href="/mysql/show_tables?database=<%= req.body.database %>"><%= req.body.database %></a>
-            /
-            Create Table
-        </h1>
-    </div>
+    <h1>
+        <a href="/mysql/show_databases">Databases</a>
+        /
+        <a href="/mysql/show_tables?database=<%= req.body.database %>"><%= req.body.database %></a>
+        /
+        Create Table
+    </h1>
 
     <form method="post" action="/mysql/create_table">
         <input type="hidden" name="database" value="<%= req.body.database %>" />
@@ -54,9 +50,7 @@
             <% } %>
         </table>
 
-        <button type="submit" class="btn btn-default">Create</button>
+        <button type="submit" class="btn">Create</button>
     </form>
-
-</div>
 
 <% include ../include/footer %>

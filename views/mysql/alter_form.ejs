@@ -1,17 +1,13 @@
 ﻿<% include ../include/header %>
 
-<!-- Begin page content -->
-<div class="container">
-    <div class="page-header">
-        <h1>
-            <a href="/mysql/show_databases">Databases</a>
-            /
-            <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
-            /
-            <a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>"><%= req.query.table %></a>
-        </h1>
-    </div>
-
+    <h1>
+        <a href="/mysql/show_databases">Databases</a>
+        /
+        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        /
+        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+    </h1>
+ 
     <table class="table table-bordered">
         <form method="post" action="/mysql/alter_table">
             <tr class="small">
@@ -27,7 +23,7 @@
                 <td>
                     <input type="hidden" name="database" value="<%= req.query.database %>" />
                     <input type="hidden" name="table" value="<%= req.query.table %>" />
-                    <input type="text" class="form-control input-sm" name="new_name" placeholder="New Name" /></td>
+                    <input type="text" class="form-control" name="new_name" placeholder="New Name" /></td>
                 <td>
                     <select class="form-control input-sm" name="new_type">
                         <option value=""></option>
@@ -40,7 +36,7 @@
                         <option value="datetime">datetime</option>
                     </select></td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs" name="add_first" value="1">Add</button></td>
+                    <button type="submit" class="btn" name="add_first" value="1">Add</button></td>
                 <th>Change</th>
                 <th>Drop</th>
             </tr>
@@ -77,9 +73,9 @@
                     <input type="hidden" name="database" value="<%= req.query.database %>" />
                     <input type="hidden" name="table" value="<%= req.query.table %>" />
                     <input type="hidden" name="field" value="<%= aRows[i].Field %>" />
-                    <input type="text" class="form-control input-sm" name="new_name" placeholder="New Name" /></td>
+                    <input type="text" class="form-control" name="new_name" placeholder="New Name" /></td>
                 <td>
-                    <select class="form-control input-sm" name="new_type">
+                    <select class="form-control" name="new_type">
                         <option value=""></option>
                         <option value="bigint(20)">bigint(20)</option>
                         <option value="int(11)">int(11)</option>
@@ -90,19 +86,17 @@
                         <option value="datetime">datetime</option>
                     </select></td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs" name="add_after" value="1">Add</button>
+                    <button type="submit" class="btn" name="add_after" value="1">Add</button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs" name="change_column" value="1">Change</button>
+                    <button type="submit" class="btn" name="change_column" value="1">Change</button>
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-default btn-xs" name="drop_column" value="1">Drop</button>
+                    <button type="submit" class="btn" name="drop_column" value="1">Drop</button>
                 </td>
             </tr>
         </form>
         <% } %>
     </table>
-
-</div>
 
 <% include ../include/footer %>

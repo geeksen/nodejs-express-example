@@ -1,14 +1,10 @@
 ﻿<% include ../include/header %>
 
-<!-- Begin page content -->
-<div class="container">
-    <div class="page-header">
-        <h1>
-            <a href="/mysql/show_databases">Databases</a>
-            /
-            <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
-        </h1>
-    </div>
+    <h1>
+        <a href="/mysql/show_databases">Databases</a>
+        /
+        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+    </h1>
 
     <p>
         <a href="/mysql/table_form?database=<%= req.query.database %>">CREATE TABLE</a>
@@ -29,22 +25,22 @@
                   <form class="form-inline" method="post" action="/mysql/rename_table">
                       <input type="hidden" name="database" value="<%= req.query.database %>" />
                       <input type="hidden" name="table_name" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
-                      <input type="text" class="form-control" name="new_table_name" placeholder="New Table Name" />
-                      <button type="submit" class="btn btn-default">Rename</button>
+					  <div class="form-group mx-sm-3">
+                          <input type="text" name="new_table_name" class="form-control" placeholder="New Table Name" />
+					  </div>
+                      <button type="submit" class="btn">Rename</button>
                   </form>
               </td>
               <td>
                   <form class="form-drop" method="post" action="/mysql/drop_table">
                       <input type="hidden" name="database" value="<%= req.query.database %>" />
                       <input type="hidden" name="table" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
-                      <button type="submit" class="btn btn-default">Drop</button>
+                      <button type="submit" class="btn">Drop</button>
                   </form>
               </td>
           </tr>
         <% } %>
     </table>
-
-</div>
 
 <script type="text/javascript">
     let confirmFormDrop = function () {

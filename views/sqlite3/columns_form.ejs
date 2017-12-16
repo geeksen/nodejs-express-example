@@ -1,9 +1,9 @@
 ﻿<% include ../include/header %>
 
     <h1>
-        <a href="/mysql/show_databases">Databases</a>
+        <a href="/sqlite3/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.body.database %>"><%= req.body.database %></a>
+        <a href="/sqlite3/show_tables?database=<%= req.body.database %>"><%= req.body.database %></a>
         /
         Create Table
     </h1>
@@ -12,7 +12,7 @@
 	&nbsp;
 	</p>
 
-    <form method="post" action="/mysql/create_table">
+    <form method="post" action="/sqlite3/create_table">
         <input type="hidden" name="database" value="<%= req.body.database %>" />
         <input type="hidden" name="table_name" value="<%= req.body.table_name %>" />
 
@@ -20,9 +20,13 @@
             <tr>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Index</th>
-                <th>Auto Increment</th>
             </tr>
+			<tr>
+            <td>
+                rowid</td>
+            <td>
+                INTEGER PRIMARY KEY</td>
+        </tr>
             <% for (let i = 0; i < req.body.num_of_columns; ++i) { %>
         <tr>
             <td>
@@ -37,18 +41,6 @@
                     <option value="varchar(255)">varchar(255)</option>
                     <option value="text">text</option>
                     <option value="datetime">datetime</option>
-                </select></td>
-            <td>
-                <select class="form-control" name="index">
-                    <option value=""></option>
-                    <option value="PRIMARY">PRIMARY</option>
-                    <option value="UNIQUE">UNIQUE</option>
-                    <option value="INDEX">INDEX</option>
-                </select></td>
-            <td>
-                <select class="form-control" name="auto_increment">
-                    <option value=""></option>
-                    <option value="AUTO_INCREMENT">AUTO_INCREMENT</option>
                 </select></td>
         </tr>
             <% } %>

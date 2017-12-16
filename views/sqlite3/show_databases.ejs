@@ -1,11 +1,11 @@
 ﻿<% include ../include/header %>
 
     <h1>
-        <a href="/mysql/show_databases">Databases</a>
+        <a href="/sqlite3/show_databases">Databases</a>
     </h1>
 
     <p>
-        <a href="/mysql/database_form">CREATE DATABASE</a>
+        <a href="/sqlite3/database_form">CREATE DATABASE</a>
     </p>
 
     <table class="table table-bordered">
@@ -15,9 +15,9 @@
         </tr>
         <% for (let i = 0; i < aDatabases.length; ++i) { %>
           <tr>
-              <td><a href="/mysql/show_tables?database=<%= aDatabases[i] %>"><%= aDatabases[i] %></a></td>
+              <td><a href="/sqlite3/show_tables?database=<%= aDatabases[i] %>"><%= aDatabases[i] %></a></td>
               <td>
-                  <form class="form-drop" method="post" action="/mysql/drop_database">
+                  <form class="form-drop" method="post" action="/sqlite3/drop_database">
                       <input type="hidden" name="database" value="<%= aDatabases[i] %>" />
                       <button type="submit" class="btn">Drop</button>
                   </form>

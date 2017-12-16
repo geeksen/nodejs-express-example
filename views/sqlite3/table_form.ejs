@@ -1,9 +1,9 @@
 ﻿<% include ../include/header %>
 
     <h1>
-        <a href="/mysql/show_databases">Databases</a>
+        <a href="/sqlite3/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/sqlite3/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
         /
         Create Table
     </h1>
@@ -12,7 +12,7 @@
 	&nbsp;
 	</p>
     
-    <form method="post" action="/mysql/columns_form">
+    <form method="post" action="/sqlite3/columns_form">
         <input type="hidden" name="database" value="<%= req.query.database %>">
         <div class="form-group">
             <label for="table_name">Table Name</label>

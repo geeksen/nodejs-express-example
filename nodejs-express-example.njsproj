@@ -32,7 +32,6 @@
     <Compile Include="app.js" />
     <Compile Include="bin\www.js" />
     <Compile Include="libs\shard.js" />
-    <Compile Include="public\responsive.js" />
     <Compile Include="routes\admin.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\mysql.js" />
@@ -42,7 +41,6 @@
     <Content Include="cfg.json" />
     <Content Include="createDbTables.sql" />
     <Content Include="package.json" />
-    <Content Include="public\style.css" />
     <Content Include="README.md" />
     <Content Include="views\admin\login.ejs" />
     <Content Include="views\error.ejs" />
@@ -54,12 +52,25 @@
     <Content Include="views\mysql\columns_form.ejs" />
     <Content Include="views\mysql\database_form.ejs" />
     <Content Include="views\mysql\desc_table.ejs" />
+    <Content Include="views\mysql\execute_query.ejs">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\mysql\select_form.ejs" />
     <Content Include="views\mysql\select_limit.ejs" />
-    <Content Include="views\mysql\select_where.ejs" />
     <Content Include="views\mysql\show_databases.ejs" />
     <Content Include="views\mysql\show_tables.ejs" />
     <Content Include="views\mysql\table_form.ejs" />
+    <Content Include="views\sqlite3\columns_form.ejs" />
+    <Content Include="views\sqlite3\database_form.ejs" />
+    <Content Include="views\sqlite3\desc_table.ejs" />
+    <Content Include="views\sqlite3\execute_query.ejs">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="views\sqlite3\select_form.ejs" />
+    <Content Include="views\sqlite3\select_limit.ejs" />
+    <Content Include="views\sqlite3\show_databases.ejs" />
+    <Content Include="views\sqlite3\show_tables.ejs" />
+    <Content Include="views\sqlite3\table_form.ejs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />
@@ -70,6 +81,7 @@
     <Folder Include="views\admin\" />
     <Folder Include="views\include\" />
     <Folder Include="views\mysql\" />
+    <Folder Include="views\sqlite3\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

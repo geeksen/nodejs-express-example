@@ -19,7 +19,16 @@ router.get('/show_databases', function (req, res, next) {
         function (err, aRows, aFields) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-          return res.releaseRender(dbConnShard, 'mysql/show_databases', { req: req, aRows: aRows })
+          let aDatabases = []
+          for (let i = 0; i < aRows.length; ++i) {
+            if (['information_schema', 'mysql', 'performance_schema'].indexOf(aRows[i].Database) > -1) {
+              continue
+            }
+
+            aDatabases.push(aRows[i].Database)
+          }
+
+          return res.releaseRender(dbConnShard, 'mysql/show_databases', { req: req, aDatabases: aDatabases })
         })
     })
 })
@@ -358,22 +367,12 @@ router.get('/select_limit', function (req, res, next) {
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, aColumns, aFields) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
-
-          let sKey = ''
-          for (let i = 0; i < aColumns.length; ++i) {
-            if (aColumns[i].Key === 'PRI') {
-              sKey = aColumns[i].Field
-              break
-            }
-          }
-
-          let iOffset = parseInt(req.query.offset)
-          let iRowCount = parseInt(req.query.row_count)
-          dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [iOffset, iRowCount],
+          
+          dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [parseInt(req.query.offset), parseInt(req.query.row_count)],
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, aColumns: aColumns, aRows: aRows, sKey: sKey })
+              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, aColumns: aColumns, aRows: aRows })
             })
         })
     })
@@ -399,20 +398,12 @@ router.get('/select_where', function (req, res, next) {
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, aColumns, aFields) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
-
-          let sKey = ''
-          for (let i = 0; i < aColumns.length; ++i) {
-            if (aColumns[i].Key === 'PRI') {
-              sKey = aColumns[i].Field
-              break
-            }
-          }
-
+          
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, aColumns: aColumns, aRows: aRows, sKey: sKey })
+              return res.releaseRender(dbConnShard, 'mysql/select_limit', { req: req, aColumns: aColumns, aRows: aRows })
             })
         })
     })
@@ -483,7 +474,7 @@ router.post('/execute', function (req, res, next) {
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }
 
-              return res.releaseRedirect(dbConnShard, '/mysql/select_limit?database=' + req.body.database + '&table=' + req.body.table + '&offset=0&row_count=10')
+              return res.releaseRender(dbConnShard, 'mysql/execute_query', { req: req })
             })
         })
     })

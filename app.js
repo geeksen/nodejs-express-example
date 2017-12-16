@@ -40,6 +40,36 @@ express.response.releaseSend = function (dbConn, message) {
   return this.send(message)
 }
 
+express.response.closeRedirect = function (db, url) {
+  db.close()
+
+  if (url === undefined) {
+    return this.send('releaseRedirect : not enough params')
+  }
+
+  return this.redirect(url)
+}
+
+express.response.closeRender = function (db, view, data) {
+  db.close()
+
+  if (view === undefined) {
+    return this.send('releaseRender : not enough params')
+  }
+
+  return this.render(view, data)
+}
+
+express.response.closeSend = function (db, message) {
+  db.close()
+
+  if (message === undefined) {
+    return this.send('releaseSend : not enough params')
+  }
+
+  return this.send(message)
+}
+
 let app = express()
 app.disable('x-powered-by')
 app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])

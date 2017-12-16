@@ -1,0 +1,44 @@
+﻿<% include ../include/header %>
+
+    <h1>
+        <a href="/sqlite3/show_databases">Databases</a>
+        /
+        <a href="/sqlite3/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        /
+        <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+    </h1>
+
+	<p>
+	&nbsp;
+	</p>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Select</th>
+            <th>Field</th>
+            <th>Type</th>
+            <th>NotNull</th>
+            <th>Key</th>
+            <th>Default</th>
+        </tr>
+		<tr>
+              <td><a href="/sqlite3/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=rowid">SELECT WHERE</a></td>
+              <td>rowid</td>
+              <td>INTEGER</td>
+              <td>1</td>
+			  <td>1</td>
+              <td>0</td>
+          </tr>
+        <% for (let i = 0; i < aRows.length; ++i) { %>
+          <tr>
+              <td></td>
+              <td><%= aRows[i].name %></td>
+              <td><%= aRows[i].type %></td>
+              <td><%= aRows[i].notnull %></td>
+			  <td><%= aRows[i].pk %></td>
+              <td><%= aRows[i].dflt_value %></td>
+          </tr>
+        <% } %>
+    </table>
+
+<% include ../include/footer %>

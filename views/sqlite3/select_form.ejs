@@ -1,18 +1,18 @@
 ﻿<% include ../include/header %>
 
     <h1>
-        <a href="/mysql/show_databases">Databases</a>
+        <a href="/sqlite3/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/sqlite3/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
         /
-        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+        <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
     </h1>
 
 	<p>
 	&nbsp;
 	</p>
 
-    <form method="get" action="/mysql/select_where">
+    <form method="get" action="/sqlite3/select_where">
         <input type="hidden" name="database" value="<%= req.query.database %>">
         <input type="hidden" name="table" value="<%= req.query.table %>">
         <div class="form-group">

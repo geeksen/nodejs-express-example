@@ -156,32 +156,52 @@ router.post('/create_table', function (req, res, next) {
     return res.render('message', { message: 'number of types is not matched' })
   }
 
-  if (req.body.name.length !== req.body.index.length) {
-    return res.render('message', { message: 'number of indexes is not matched' })
+  if (req.body.name.length !== req.body.key.length) {
+    return res.render('message', { message: 'number of keys is not matched' })
   }
 
   if (req.body.name.length !== req.body.auto_increment.length) {
     return res.render('message', { message: 'number of auto_increments is not matched' })
+  }
+  
+  let getDefaultValue = function (sType, sAutoIncrement) {
+    if (sType.indexOf('int(') > -1) {
+      if (sAutoIncrement === 'AUTO_INCREMENT') {
+        return ' AUTO_INCREMENT'
+      } else {
+        return ' DEFAULT 0'
+      }
+    } else if (sType === 'double') {
+      return ' DEFAULT 0'
+    } else if (sType === 'char(1)') {
+      return " DEFAULT 'N'"
+    } else if (sType === 'varchar(255)' || sType === 'text') {
+      return " DEFAULT ''"
+    } else if (sType === 'datetime') {
+      return " DEFAULT '1970-01-01 00:00:00'"
+    } else {
+      return ''
+    }
   }
 
   req.app.get(Shard.sByNum(req)).getConnection(
     function (err, dbConnShard) {
       if (err) { return res.send(err.message) }
 
-      let aColumnsAndIndexes = []
+      let aColumns = []
       let aPrimaryKeys = []
       let aUniqueKeys = []
       let aKeys = []
       let aAutoIncrements = []
 
       for (let i = 0; i < req.body.name.length; ++i) {
-        aColumnsAndIndexes.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL ' + req.body.auto_increment[i])
+        aColumns.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL' + getDefaultValue(req.body.type[i], req.body.auto_increment[i]))
 
-        if (req.body.index[i] === 'PRIMARY') {
+        if (req.body.key[i] === 'PRIMARY') {
           aPrimaryKeys.push('`' + req.body.name[i] + '`')
-        } else if (req.body.index[i] === 'UNIQUE') {
+        } else if (req.body.key[i] === 'UNIQUE') {
           aUniqueKeys.push('`' + req.body.name[i] + '`')
-        } else if (req.body.index[i] === 'INDEX') {
+        } else if (req.body.key[i] === 'INDEX') {
           aKeys.push('`' + req.body.name[i] + '`')
         }
 
@@ -191,15 +211,15 @@ router.post('/create_table', function (req, res, next) {
       }
 
       if (aPrimaryKeys.length > 0) {
-        aColumnsAndIndexes.push('PRIMARY KEY (' + aPrimaryKeys.join(',') + ')')
+        aColumns.push('PRIMARY KEY (' + aPrimaryKeys.join(',') + ')')
       }
 
       if (aUniqueKeys.length > 0) {
-        aColumnsAndIndexes.push('UNIQUE KEY ' + aUniqueKeys[0] + ' (' + aUniqueKeys.join(',') + ')')
+        aColumns.push('UNIQUE KEY ' + aUniqueKeys[0] + ' (' + aUniqueKeys.join(',') + ')')
       }
 
       if (aKeys.length > 0) {
-        aColumnsAndIndexes.push('KEY ' + aKeys[0] + ' (' + aKeys.join(',') + ')')
+        aColumns.push('KEY ' + aKeys[0] + ' (' + aKeys.join(',') + ')')
       }
 
       if (aAutoIncrements.length > 1) {
@@ -207,7 +227,7 @@ router.post('/create_table', function (req, res, next) {
       }
 
       let sQuery = 'CREATE TABLE IF NOT EXISTS `' + req.body.database + '`.`' + req.body.table_name + '` ('
-      sQuery += aColumnsAndIndexes.join(',\n')
+      sQuery += aColumns.join(',\n')
       sQuery += '\n) ENGINE=InnoDB DEFAULT CHARSET=utf8'
 
       if (aAutoIncrements.length > 0) {

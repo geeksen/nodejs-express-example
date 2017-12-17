@@ -20,12 +20,14 @@
             <tr>
                 <th>Name</th>
                 <th>Type</th>
+				<th>Key</th>
             </tr>
 			<tr>
             <td>
                 rowid</td>
             <td>
-                INTEGER PRIMARY KEY</td>
+                INTEGER</td>
+			<td>PRIMARY</td>
         </tr>
             <% for (let i = 0; i < req.body.num_of_columns; ++i) { %>
         <tr>
@@ -41,6 +43,11 @@
                     <option value="varchar(255)">varchar(255)</option>
                     <option value="text">text</option>
                     <option value="datetime">datetime</option>
+                </select></td>
+			<td>
+                <select class="form-control" name="key">
+                    <option value=""></option>
+                    <option value="PRIMARY">PRIMARY</option>
                 </select></td>
         </tr>
             <% } %>

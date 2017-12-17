@@ -156,6 +156,26 @@ router.post('/create_table', function (req, res, next) {
   if (req.body.name.length !== req.body.type.length) {
     return res.render('message', { message: 'number of types is not matched' })
   }
+
+  if (req.body.name.length !== req.body.key.length) {
+    return res.render('message', { message: 'number of keys is not matched' })
+  }
+
+  let getDefaultValue = function (sType) {
+    if (sType.indexOf('int(') > -1) {
+      return ' DEFAULT 0'
+    } else if (sType === 'double') {
+      return ' DEFAULT 0'
+    } else if (sType === 'char(1)') {
+      return " DEFAULT 'N'"
+    } else if (sType === 'varchar(255)' || sType === 'text') {
+      return " DEFAULT ''"
+    } else if (sType === 'datetime') {
+      return " DEFAULT '1970-01-01 00:00:00'"
+    } else {
+      return ''
+    }
+  }
   
   let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
     function (err) {
@@ -165,13 +185,23 @@ router.post('/create_table', function (req, res, next) {
         function (err) {
           if (err) { return res.closeSend(db, err) }
 
-          let aColumnsAndIndexes = []
+          let aColumns = []
+          let aPrimaryKeys = []
+
           for (let i = 0; i < req.body.name.length; ++i) {
-            aColumnsAndIndexes.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL')
+            aColumns.push('`' + req.body.name[i] + '` ' + req.body.type[i] + ' NOT NULL' + getDefaultValue(req.body.type[i]))
+
+            if (req.body.key[i] === 'PRIMARY') {
+              aPrimaryKeys.push('`' + req.body.name[i] + '`')
+            }
           }
-          
+
+          if (aPrimaryKeys.length > 0) {
+            aColumns.push('PRIMARY KEY (' + aPrimaryKeys.join(',') + ')')
+          }
+
           let sQuery = 'CREATE TABLE IF NOT EXISTS `' + req.body.table_name + '` ('
-          sQuery += aColumnsAndIndexes.join(',\n')
+          sQuery += aColumns.join(',\n')
           sQuery += '\n)'
 
           // return res.closeSend(db, sQuery)

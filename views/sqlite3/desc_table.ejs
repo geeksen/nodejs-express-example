@@ -31,7 +31,10 @@
           </tr>
         <% for (let i = 0; i < aRows.length; ++i) { %>
           <tr>
-              <td></td>
+              <td><% if (aRows[i].pk === 1) { %>
+                    <a href="/sqlite3/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=<%= aRows[i].name %>">SELECT WHERE</a>
+                  <% } %>
+              </td>
               <td><%= aRows[i].name %></td>
               <td><%= aRows[i].type %></td>
               <td><%= aRows[i].notnull %></td>

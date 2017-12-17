@@ -20,7 +20,7 @@
             <tr>
                 <th>Name</th>
                 <th>Type</th>
-                <th>Index</th>
+                <th>Key</th>
                 <th>Auto Increment</th>
             </tr>
             <% for (let i = 0; i < req.body.num_of_columns; ++i) { %>
@@ -39,7 +39,7 @@
                     <option value="datetime">datetime</option>
                 </select></td>
             <td>
-                <select class="form-control" name="index">
+                <select class="form-control" name="key">
                     <option value=""></option>
                     <option value="PRIMARY">PRIMARY</option>
                     <option value="UNIQUE">UNIQUE</option>

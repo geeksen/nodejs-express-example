@@ -338,7 +338,7 @@ router.get('/select_where', function (req, res, next) {
             function (err, aColumns) {
               if (err) { return res.closeSend(db, err) }
 
-              db.all('SELECT * FROM `' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
+              db.all('SELECT rowid, * FROM `' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
                 function (err, aRows) {
                   if (err) { return res.closeSend(db, err) }
 

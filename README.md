@@ -1,5 +1,4 @@
 # nodejs-express-example
-Nodejs Express Example
 
 * sudo apt install nginx
 * sudo systemctl enable nginx

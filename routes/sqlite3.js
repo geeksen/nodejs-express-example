@@ -120,7 +120,7 @@ router.post('/columns_form', function (req, res, next) {
     return res.render('message', { message: 'num_of_columns is required' })
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 

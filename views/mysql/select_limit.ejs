@@ -3,74 +3,89 @@
     <h1>
         <a href="/mysql/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/mysql/show_tables?database=<%= req.query.database %>">
+            <%= req.query.database %>
+        </a>
         /
-        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10">
+            <%= req.query.table %>
+        </a>
     </h1>
 
-	<p>
+    <p>
         <a href="/mysql/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>">DESC TABLE</a>
     </p>
 
-	<% if (aRows.length === 0) { %>
-		<h1>No Result</h1>
-		<% } %>
+    <% if (aRows.length === 0) { %>
+        <h1>No Result</h1>
+        <% } %>
 
-        <table class="table table-bordered">
-            <tr class="small">
-                <% for (let i = 0; i < aColumns.length; ++i) { %>
-                <td><strong><%= aColumns[i].Field %></strong><br/><%= aColumns[i].Type %></td>
-                <% } %>
-                <td></td>
-				<td></td>
-            </tr>
-            <form method="post" action="/mysql/execute">
+            <table class="table table-bordered">
                 <tr class="small">
                     <% for (let i = 0; i < aColumns.length; ++i) { %>
-                    <% if (aColumns[i].Extra === 'auto_increment') { %>
-                    <td>auto_increment</td>
-                    <% } else { %>
-                    <td>
-                        <input type="text" class="form-control" name="<%= aColumns[i].Field %>" /></td>
-                    <% } %>
-                    <% } %>
-                <td>
-				<input type="hidden" name="database" value="<%= req.query.database %>" />
-                <input type="hidden" name="table" value="<%= req.query.table %>" />
-                    <button type="submit" class="btn" name="insert" value="1">Insert</button></td>
-					<td></td>
+                        <td>
+                            <strong>
+                                <%= aColumns[i].Field %>
+                            </strong>
+                            <br/>
+                            <%= aColumns[i].Type %>
+                        </td>
+                        <% } %>
+                            <td></td>
+                            <td></td>
                 </tr>
-            </form>
-            <% for (let i = 0; i < aRows.length; ++i) { %>
-          <form method="post" action="/mysql/execute">
-              <tr>
-                  <% for (let j = 0; j < aColumns.length; ++j) { %>
-                <td>
-                    <input type="text" class="form-control" name="<%= aColumns[j].Field %>" value="<%= aRows[i][aColumns[j].Field] %>" /></td>
-                  <% } %>
-                <td>
-				<input type="hidden" name="database" value="<%= req.query.database %>" />
-              <input type="hidden" name="table" value="<%= req.query.table %>" />
-                    <button type="submit" class="btn" name="update" value="1">Update</button></td>
-                <td>
-				    <button type="submit" class="btn" name="delete" value="1">Delete</button></td>
-              </tr>
-          </form>
-            <% } %>
-        </table>
+                <form method="post" action="/mysql/execute">
+                    <tr class="small">
+                        <% for (let i = 0; i < aColumns.length; ++i) { %>
+                            <% if (aColumns[i].Extra === 'auto_increment') { %>
+                                <td>auto_increment</td>
+                                <% } else { %>
+                                    <td>
+                                        <input type="text" class="form-control" name="<%= aColumns[i].Field %>" />
+                                    </td>
+                                    <% } %>
+                                        <% } %>
+                                            <td>
+                                                <input type="hidden" name="database" value="<%= req.query.database %>" />
+                                                <input type="hidden" name="table" value="<%= req.query.table %>" />
+                                                <button type="submit" class="btn" name="insert" value="1">Insert</button>
+                                            </td>
+                                            <td></td>
+                    </tr>
+                </form>
+                <% for (let i = 0; i < aRows.length; ++i) { %>
+                    <form method="post" action="/mysql/execute">
+                        <tr>
+                            <% for (let j = 0; j < aColumns.length; ++j) { %>
+                                <td>
+                                    <input type="text" class="form-control" name="<%= aColumns[j].Field %>" value="<%= aRows[i][aColumns[j].Field] %>" />
+                                </td>
+                                <% } %>
+                                    <td>
+                                        <input type="hidden" name="database" value="<%= req.query.database %>" />
+                                        <input type="hidden" name="table" value="<%= req.query.table %>" />
+                                        <button type="submit" class="btn" name="update" value="1">Update</button>
+                                    </td>
+                                    <td>
+                                        <button type="submit" class="btn" name="delete" value="1">Delete</button>
+                                    </td>
+                        </tr>
+                    </form>
+                    <% } %>
+            </table>
 
-	<p>
-	<% if (parseInt(req.query.offset) > 0) { %>
-		<a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) - parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">PREV</a>
-	<% } else { %>
-		PREV
-	<% } %>
-	|
-	<% if (aRows.length === parseInt(req.query.row_count)) { %>
-		<a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) + parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">NEXT</a>
-	<% } else { %>
-		NEXT
-	<% } %>
-	</p>
+            <p>
+                <% if (parseInt(req.query.offset) > 0) { %>
+                    <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) - parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">PREV</a>
+                    <% } else { %>
+                        PREV
+                        <% } %>
+                            |
+                            <% if (aRows.length === parseInt(req.query.row_count)) { %>
+                                <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) + parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">NEXT</a>
+                                <% } else { %>
+                                    NEXT
+                                    <% } %>
+            </p>
 
-<% include ../include/footer %>
+            <% include ../include/footer %>

@@ -3,73 +3,93 @@
     <h1>
         <a href="/sqlite3/show_databases">Databases</a>
         /
-        <a href="/sqlite3/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/sqlite3/show_tables?database=<%= req.query.database %>">
+            <%= req.query.database %>
+        </a>
         /
-        <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+        <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10">
+            <%= req.query.table %>
+        </a>
     </h1>
 
-	<p>
+    <p>
         <a href="/sqlite3/desc_table?database=<%= req.query.database %>&table=<%= req.query.table %>">DESC TABLE</a>
     </p>
 
-        <table class="table table-bordered">
-            <tr class="small">
-			    <td><strong>rowid</strong><br/>INTEGER</td>
-                <% for (let i = 0; i < aColumns.length; ++i) { %>
-                <td><strong><%= aColumns[i].name %></strong><br/><%= aColumns[i].type %></td>
-                <% } %>
-                <td></td>
-				<td></td>
-            </tr>
-            <form method="post" action="/sqlite3/execute">
-			    
-                <tr class="small">
-				    <td></td>
-                    <% for (let i = 0; i < aColumns.length; ++i) { %>
-                    <td>
-                        <input type="text" class="form-control" name="<%= aColumns[i].name %>" /></td>
-                    <% } %>
+    <table class="table table-bordered">
+        <tr class="small">
+            <td>
+                <strong>rowid</strong>
+                <br/>INTEGER</td>
+            <% for (let i = 0; i < aColumns.length; ++i) { %>
                 <td>
-				<input type="hidden" name="database" value="<%= req.query.database %>" />
-                <input type="hidden" name="table" value="<%= req.query.table %>" />
-                    <button type="submit" class="btn" name="insert" value="1">Insert</button></td>
-					<td></td>
+                    <strong>
+                        <%= aColumns[i].name %>
+                    </strong>
+                    <br/>
+                    <%= aColumns[i].type %>
+                </td>
+                <% } %>
+                    <td></td>
+                    <td></td>
+        </tr>
+        <form method="post" action="/sqlite3/execute">
+
+            <tr class="small">
+                <td></td>
+                <% for (let i = 0; i < aColumns.length; ++i) { %>
+                    <td>
+                        <input type="text" class="form-control" name="<%= aColumns[i].name %>" />
+                    </td>
+                    <% } %>
+                        <td>
+                            <input type="hidden" name="database" value="<%= req.query.database %>" />
+                            <input type="hidden" name="table" value="<%= req.query.table %>" />
+                            <button type="submit" class="btn" name="insert" value="1">Insert</button>
+                        </td>
+                        <td></td>
+            </tr>
+        </form>
+        <% for (let i = 0; i < aRows.length; ++i) { %>
+            <form method="post" action="/sqlite3/execute">
+                <tr>
+                    <td>
+                        <%= aRows[i].rowid %>
+                    </td>
+                    <% for (let j = 0; j < aColumns.length; ++j) { %>
+                        <td>
+                            <input type="text" class="form-control input-sm" name="<%= aColumns[j].name %>" value="<%= aRows[i][aColumns[j].name] %>"
+                            />
+                        </td>
+                        <% } %>
+                            <td>
+                                <input type="hidden" name="database" value="<%= req.query.database %>" />
+                                <input type="hidden" name="table" value="<%= req.query.table %>" />
+                                <input type="hidden" name="rowid" value="<%= aRows[i].rowid %>" />
+                                <button type="submit" class="btn" name="update" value="1">Update</button>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn" name="delete" value="1">Delete</button>
+                            </td>
+                            </td>
                 </tr>
             </form>
-            <% for (let i = 0; i < aRows.length; ++i) { %>
-          <form method="post" action="/sqlite3/execute">
-              <tr>
-			      <td><%= aRows[i].rowid %></td>
-                  <% for (let j = 0; j < aColumns.length; ++j) { %>
-                <td>
-                    <input type="text" class="form-control input-sm" name="<%= aColumns[j].name %>" value="<%= aRows[i][aColumns[j].name] %>" /></td>
-                  <% } %>
-                <td>
-				<input type="hidden" name="database" value="<%= req.query.database %>" />
-              <input type="hidden" name="table" value="<%= req.query.table %>" />
-			  <input type="hidden" name="rowid" value="<%= aRows[i].rowid %>" />
-                    <button type="submit" class="btn" name="update" value="1">Update</button></td>
-                <td>
-				    <button type="submit" class="btn" name="delete" value="1">Delete</button></td>
-              </td>
-              </tr>
-          </form>
             <% } %>
-        </table>
-    
+    </table>
 
-	<p>
-	<% if (parseInt(req.query.offset) > 0) { %>
-		<a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) - parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">PREV</a>
-	<% } else { %>
-		PREV
-	<% } %>
-	|
-	<% if (aRows.length === parseInt(req.query.row_count)) { %>
-		<a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) + parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">NEXT</a>
-	<% } else { %>
-		NEXT
-	<% } %>
-	</p>
 
-<% include ../include/footer %>
+    <p>
+        <% if (parseInt(req.query.offset) > 0) { %>
+            <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) - parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">PREV</a>
+            <% } else { %>
+                PREV
+                <% } %>
+                    |
+                    <% if (aRows.length === parseInt(req.query.row_count)) { %>
+                        <a href="/sqlite3/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=<%= parseInt(req.query.offset) + parseInt(req.query.row_count) %>&row_count=<%= req.query.row_count %>">NEXT</a>
+                        <% } else { %>
+                            NEXT
+                            <% } %>
+    </p>
+
+    <% include ../include/footer %>

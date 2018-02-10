@@ -3,7 +3,9 @@
     <h1>
         <a href="/mysql/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/mysql/show_tables?database=<%= req.query.database %>">
+            <%= req.query.database %>
+        </a>
     </h1>
 
     <p>
@@ -12,47 +14,55 @@
 
     <table class="table table-bordered">
         <tr>
-            <th>Tables in <%= req.query.database %></th>
+            <th>Tables in
+                <%= req.query.database %>
+            </th>
             <th>Alter</th>
             <td>Rename</td>
             <td>Drop</td>
         </tr>
         <% for (let i = 0; i < aRows.length; ++i) { %>
-          <tr>
-              <td><a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= aRows[i]['Tables_in_' + req.query.database] %>&offset=0&row_count=10"><%= aRows[i]['Tables_in_' + req.query.database] %></a></td>
-              <td><a href="/mysql/alter_form?database=<%= req.query.database %>&table=<%= aRows[i]['Tables_in_' + req.query.database] %>">ALTER</a></td>
-              <td>
-                  <form class="form-inline" method="post" action="/mysql/rename_table">
-                      <input type="hidden" name="database" value="<%= req.query.database %>" />
-                      <input type="hidden" name="table_name" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
-                      <input type="text" name="new_table_name" class="form-control mx-sm-3" placeholder="New Table Name" />
-                      <button type="submit" class="btn">Rename</button>
-                  </form>
-              </td>
-              <td>
-                  <form class="form-drop" method="post" action="/mysql/drop_table">
-                      <input type="hidden" name="database" value="<%= req.query.database %>" />
-                      <input type="hidden" name="table" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
-                      <button type="submit" class="btn">Drop</button>
-                  </form>
-              </td>
-          </tr>
-        <% } %>
+            <tr>
+                <td>
+                    <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= aRows[i]['Tables_in_' + req.query.database] %>&offset=0&row_count=10">
+                        <%= aRows[i]['Tables_in_' + req.query.database] %>
+                    </a>
+                </td>
+                <td>
+                    <a href="/mysql/alter_form?database=<%= req.query.database %>&table=<%= aRows[i]['Tables_in_' + req.query.database] %>">ALTER</a>
+                </td>
+                <td>
+                    <form class="form-inline" method="post" action="/mysql/rename_table">
+                        <input type="hidden" name="database" value="<%= req.query.database %>" />
+                        <input type="hidden" name="table_name" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
+                        <input type="text" name="new_table_name" class="form-control mx-sm-3" placeholder="New Table Name" />
+                        <button type="submit" class="btn">Rename</button>
+                    </form>
+                </td>
+                <td>
+                    <form class="form-drop" method="post" action="/mysql/drop_table">
+                        <input type="hidden" name="database" value="<%= req.query.database %>" />
+                        <input type="hidden" name="table" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
+                        <button type="submit" class="btn">Drop</button>
+                    </form>
+                </td>
+            </tr>
+            <% } %>
     </table>
 
-<script type="text/javascript">
-    let confirmFormDrop = function () {
-        let formDrop = document.getElementsByClassName('form-drop')
-        for (let i = 0; i < formDrop.length; ++i) {
-            formDrop[i].onsubmit = function () {
-                return confirm('Really?')
+    <script type="text/javascript">
+        let confirmFormDrop = function () {
+            let formDrop = document.getElementsByClassName('form-drop')
+            for (let i = 0; i < formDrop.length; ++i) {
+                formDrop[i].onsubmit = function () {
+                    return confirm('Really?')
+                }
             }
         }
-    }
 
-    window.onload = function () {
-        confirmFormDrop()
-    }
-</script>
+        window.onload = function () {
+            confirmFormDrop()
+        }
+    </script>
 
-<% include ../include/footer %>
+    <% include ../include/footer %>

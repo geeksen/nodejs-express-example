@@ -1,40 +1,43 @@
 ﻿<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
 
-    <title>Signin Template for Bootstrap</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-    <!-- Bootstrap core CSS -->
-    <link href="/bootstrap-4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Signin Template for Bootstrap</title>
 
-    <!-- Custom styles for this template -->
-    <link href="/bootstrap-4.0.0-beta.2/examples/signin/signin.css" rel="stylesheet">
-  </head>
+  <!-- Bootstrap core CSS -->
+  <link href="/bootstrap-4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
 
-  <body>
+  <!-- Custom styles for this template -->
+  <link href="/bootstrap-4.0.0-beta.2/examples/signin/signin.css" rel="stylesheet">
+</head>
 
-    <div class="container">
+<body>
 
-      <form class="form-signin" method="post" action="/admin/auth">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <label for="adminId" class="sr-only">Admin Id</label>
-        <input type="text" name="admin_id" id="adminId" class="form-control" placeholder="Admin Id" required autofocus>
-        <label for="password" class="sr-only">Password</label>
-        <input type="password" name="passwd" id="password" class="form-control" placeholder="Password" required>
-		<!--
+  <div class="container">
+
+    <form class="form-signin" method="post" action="/admin/auth">
+      <h2 class="form-signin-heading">Please sign in</h2>
+      <label for="adminId" class="sr-only">Admin Id</label>
+      <input type="text" name="admin_id" id="adminId" class="form-control" placeholder="Admin Id" required autofocus>
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" name="passwd" id="password" class="form-control" placeholder="Password" required>
+      <!--
         <div class="checkbox">
           <label>
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
 		-->
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-      </form>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    </form>
 
-    </div> <!-- /container -->
-  </body>
+  </div>
+  <!-- /container -->
+</body>
+
 </html>

@@ -3,14 +3,18 @@
     <h1>
         <a href="/mysql/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.query.database %>"><%= req.query.database %></a>
+        <a href="/mysql/show_tables?database=<%= req.query.database %>">
+            <%= req.query.database %>
+        </a>
         /
-        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10"><%= req.query.table %></a>
+        <a href="/mysql/select_limit?database=<%= req.query.database %>&table=<%= req.query.table %>&offset=0&row_count=10">
+            <%= req.query.table %>
+        </a>
     </h1>
 
-	<p>
-	&nbsp;
-	</p>
+    <p>
+        &nbsp;
+    </p>
 
     <table class="table table-bordered">
         <tr>
@@ -23,19 +27,32 @@
             <th>Extra</th>
         </tr>
         <% for (let i = 0; i < aRows.length; ++i) { %>
-          <tr>
-              <td><% if (['PRI', 'UNI'].indexOf(aRows[i].Key) > -1) { %>
-                    <a href="/mysql/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=<%= aRows[i].Field %>">SELECT WHERE</a>
-                  <% } %>
-              </td>
-              <td><%= aRows[i].Field %></td>
-              <td><%= aRows[i].Type %></td>
-              <td><%= aRows[i].Null %></td>
-              <td><%= aRows[i].Key %></td>
-              <td><%= aRows[i].Default %></td>
-              <td><%= aRows[i].Extra %></td>
-          </tr>
-        <% } %>
+            <tr>
+                <td>
+                    <% if (['PRI', 'UNI'].indexOf(aRows[i].Key) > -1) { %>
+                        <a href="/mysql/select_form?database=<%= req.query.database %>&table=<%= req.query.table %>&key=<%= aRows[i].Field %>">SELECT WHERE</a>
+                        <% } %>
+                </td>
+                <td>
+                    <%= aRows[i].Field %>
+                </td>
+                <td>
+                    <%= aRows[i].Type %>
+                </td>
+                <td>
+                    <%= aRows[i].Null %>
+                </td>
+                <td>
+                    <%= aRows[i].Key %>
+                </td>
+                <td>
+                    <%= aRows[i].Default %>
+                </td>
+                <td>
+                    <%= aRows[i].Extra %>
+                </td>
+            </tr>
+            <% } %>
     </table>
 
-<% include ../include/footer %>
+    <% include ../include/footer %>

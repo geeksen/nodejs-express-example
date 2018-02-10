@@ -3,14 +3,15 @@
     <h1>
         <a href="/mysql/show_databases">Databases</a>
         /
-        <a href="/mysql/show_tables?database=<%= req.body.database %>"><%= req.body.database %></a>
-        /
-        Create Table
+        <a href="/mysql/show_tables?database=<%= req.body.database %>">
+            <%= req.body.database %>
+        </a>
+        / Create Table
     </h1>
 
-	<p>
-	&nbsp;
-	</p>
+    <p>
+        &nbsp;
+    </p>
 
     <form method="post" action="/mysql/create_table">
         <input type="hidden" name="database" value="<%= req.body.database %>" />
@@ -24,37 +25,41 @@
                 <th>Auto Increment</th>
             </tr>
             <% for (let i = 0; i < req.body.num_of_columns; ++i) { %>
-        <tr>
-            <td>
-                <input type="text" class="form-control" name="name" /></td>
-            <td>
-                <select class="form-control" name="type">
-                    <option value=""></option>
-                    <option value="bigint(20)">bigint(20)</option>
-                    <option value="int(11)">int(11)</option>
-                    <option value="double">double</option>
-                    <option value="char(1)">char(1)</option>
-                    <option value="varchar(255)">varchar(255)</option>
-                    <option value="text">text</option>
-                    <option value="datetime">datetime</option>
-                </select></td>
-            <td>
-                <select class="form-control" name="key">
-                    <option value=""></option>
-                    <option value="PRIMARY">PRIMARY</option>
-                    <option value="UNIQUE">UNIQUE</option>
-                    <option value="INDEX">INDEX</option>
-                </select></td>
-            <td>
-                <select class="form-control" name="auto_increment">
-                    <option value=""></option>
-                    <option value="AUTO_INCREMENT">AUTO_INCREMENT</option>
-                </select></td>
-        </tr>
-            <% } %>
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" name="name" />
+                    </td>
+                    <td>
+                        <select class="form-control" name="type">
+                            <option value=""></option>
+                            <option value="bigint(20)">bigint(20)</option>
+                            <option value="int(11)">int(11)</option>
+                            <option value="double">double</option>
+                            <option value="char(1)">char(1)</option>
+                            <option value="varchar(255)">varchar(255)</option>
+                            <option value="text">text</option>
+                            <option value="datetime">datetime</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" name="key">
+                            <option value=""></option>
+                            <option value="PRIMARY">PRIMARY</option>
+                            <option value="UNIQUE">UNIQUE</option>
+                            <option value="INDEX">INDEX</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" name="auto_increment">
+                            <option value=""></option>
+                            <option value="AUTO_INCREMENT">AUTO_INCREMENT</option>
+                        </select>
+                    </td>
+                </tr>
+                <% } %>
         </table>
 
         <button type="submit" class="btn">Create</button>
     </form>
 
-<% include ../include/footer %>
+    <% include ../include/footer %>

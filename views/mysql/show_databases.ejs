@@ -14,31 +14,35 @@
             <th>Drop</th>
         </tr>
         <% for (let i = 0; i < aDatabases.length; ++i) { %>
-          <tr>
-              <td><a href="/mysql/show_tables?database=<%= aDatabases[i] %>"><%= aDatabases[i] %></a></td>
-              <td>
-                  <form class="form-drop" method="post" action="/mysql/drop_database">
-                      <input type="hidden" name="database" value="<%= aDatabases[i] %>" />
-                      <button type="submit" class="btn">Drop</button>
-                  </form>
-              </td>
-          </tr>
-        <% } %>
+            <tr>
+                <td>
+                    <a href="/mysql/show_tables?database=<%= aDatabases[i] %>">
+                        <%= aDatabases[i] %>
+                    </a>
+                </td>
+                <td>
+                    <form class="form-drop" method="post" action="/mysql/drop_database">
+                        <input type="hidden" name="database" value="<%= aDatabases[i] %>" />
+                        <button type="submit" class="btn">Drop</button>
+                    </form>
+                </td>
+            </tr>
+            <% } %>
     </table>
 
-<script type="text/javascript">
-    let confirmFormDrop = function () {
-        let formDrop = document.getElementsByClassName('form-drop')
-        for (let i = 0; i < formDrop.length; ++i) {
-            formDrop[i].onsubmit = function () {
-                return confirm('Really?')
+    <script type="text/javascript">
+        let confirmFormDrop = function () {
+            let formDrop = document.getElementsByClassName('form-drop')
+            for (let i = 0; i < formDrop.length; ++i) {
+                formDrop[i].onsubmit = function () {
+                    return confirm('Really?')
+                }
             }
         }
-    }
 
-    window.onload = function () {
-        confirmFormDrop()
-    }
-</script>
+        window.onload = function () {
+            confirmFormDrop()
+        }
+    </script>
 
-<% include ../include/footer %>
+    <% include ../include/footer %>

@@ -12,7 +12,7 @@ router.get('/show_databases', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  fs.readdir('./sqlite3', function (err, aFiles) {
+  fs.readdir('./database', function (err, aFiles) {
     if (err) { return res.send(err) }
 
     let aDatabases = []
@@ -48,7 +48,7 @@ router.post('/create_database', function (req, res, next) {
     return res.render('message', { message: 'database_name is required' })
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database_name, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database_name, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -61,11 +61,11 @@ router.post('/drop_database', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  fs.unlink(['./sqlite3/', req.body.database, '.db'].join(''),
+  fs.unlink(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
-      fs.unlink(['./sqlite3/', req.body.database, '.db-journal'].join(''),
+      fs.unlink(['./database/', req.body.database, '.db-journal'].join(''),
         function (err) {
           if (err) { return res.redirect('/sqlite3/show_databases') }
 
@@ -79,7 +79,7 @@ router.get('/show_tables', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.query.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -122,7 +122,7 @@ router.post('/columns_form', function (req, res, next) {
     return res.render('message', { message: 'num_of_columns is required' })
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -179,7 +179,7 @@ router.post('/create_table', function (req, res, next) {
     }
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -223,7 +223,7 @@ router.post('/rename_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -246,7 +246,7 @@ router.post('/drop_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -269,7 +269,7 @@ router.get('/desc_table', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.query.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -292,7 +292,7 @@ router.get('/select_limit', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.query.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -328,7 +328,7 @@ router.get('/select_where', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.query.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 
@@ -356,7 +356,7 @@ router.post('/execute', function (req, res, next) {
     return res.redirect('/admin/login')
   }
 
-  let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
+  let db = new sqlite3.Database(['./database/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
 

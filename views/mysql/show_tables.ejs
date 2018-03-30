@@ -36,14 +36,14 @@
                         <input type="hidden" name="database" value="<%= req.query.database %>" />
                         <input type="hidden" name="table_name" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
                         <input type="text" name="new_table_name" class="form-control mx-sm-3" placeholder="New Table Name" />
-                        <button type="submit" class="btn">Rename</button>
+                        <button type="submit" class="btn btn-secondary">Rename</button>
                     </form>
                 </td>
                 <td>
                     <form class="form-drop" method="post" action="/mysql/drop_table">
                         <input type="hidden" name="database" value="<%= req.query.database %>" />
                         <input type="hidden" name="table" value="<%= aRows[i]['Tables_in_' + req.query.database] %>" />
-                        <button type="submit" class="btn">Drop</button>
+                        <button type="submit" class="btn btn-secondary">Drop</button>
                     </form>
                 </td>
             </tr>

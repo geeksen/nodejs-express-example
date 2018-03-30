@@ -3,7 +3,6 @@
 
 let express = require('express')
 let router = express.Router()
-let md5 = require('md5')
 
 router.get('/login', function (req, res, next) {
   let sRemoteAddr = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -48,7 +47,7 @@ router.post('/auth', function (req, res, next) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
           if (aRows.length === 0) { return res.releaseRender(dbConnShard, 'message', { message: 'access denied' }) }
 
-          dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, md5(md5(req.body.passwd)), 'N'],
+          dbConnShard.query('SELECT admin_id FROM admin WHERE admin_id = ? AND passwd = ? AND is_deleted = ?', [req.body.admin_id, req.body.passwd, 'N'],
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }
               if (aRows.length === 0) { return res.releaseRender(dbConnShard, 'message', { message: 'login failed' }) }

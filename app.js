@@ -2,6 +2,8 @@
 'use strict'
 
 let cfg = require('./cfg')
+let extended = require('./libs/extended')
+
 let express = require('express')
 let path = require('path')
 let logger = require('morgan')
@@ -10,65 +12,11 @@ let cookieSession = require('cookie-session')
 let bodyParser = require('body-parser')
 let aws = require('aws-sdk')
 
-express.response.releaseRedirect = function (dbConn, url) {
-  dbConn.release()
+express.request.sIP = extended.sIP
 
-  if (url === undefined) {
-    return this.send('releaseRedirect : not enough params')
-  }
-
-  return this.redirect(url)
-}
-
-express.response.releaseRender = function (dbConn, view, data) {
-  dbConn.release()
-
-  if (view === undefined) {
-    return this.send('releaseRender : not enough params')
-  }
-
-  return this.render(view, data)
-}
-
-express.response.releaseSend = function (dbConn, message) {
-  dbConn.release()
-
-  if (message === undefined) {
-    return this.send('releaseSend : not enough params')
-  }
-
-  return this.send(message)
-}
-
-express.response.closeRedirect = function (db, url) {
-  db.close()
-
-  if (url === undefined) {
-    return this.send('releaseRedirect : not enough params')
-  }
-
-  return this.redirect(url)
-}
-
-express.response.closeRender = function (db, view, data) {
-  db.close()
-
-  if (view === undefined) {
-    return this.send('releaseRender : not enough params')
-  }
-
-  return this.render(view, data)
-}
-
-express.response.closeSend = function (db, message) {
-  db.close()
-
-  if (message === undefined) {
-    return this.send('releaseSend : not enough params')
-  }
-
-  return this.send(message)
-}
+express.response.closeRedirect = extended.closeRedirect
+express.response.closeRender = extended.closeRender
+express.response.closeSend = extended.closeSend
 
 let app = express()
 app.disable('x-powered-by')
@@ -119,36 +67,12 @@ app.use('/', require('./routes/index'))
 app.use('/admin', require('./routes/admin'))
 app.use('/mysql', require('./routes/mysql'))
 app.use('/sqlite3', require('./routes/sqlite3'))
+app.use('/board', require('./routes/board'))
+app.use('/calendar', require('./routes/calendar'))
+// app.use('/photo', require('./routes/photo'))
+// app.use('/video', require('./routes/video'))
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  let err = new Error('Not Found')
-  err.status = 404
-  next(err)
-})
-
-// error handlers
-
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function (err, req, res, next) {
-    res.status(err.status || 500)
-    res.render('error', {
-      message: err.message,
-      error: err
-    })
-  })
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500)
-  res.render('error', {
-    message: err.message,
-    error: {}
-  })
-})
+app.use(extended.notFound) // catch 404 and forward to error handler
+app.use(extended.errorHandler) // error handler
 
 module.exports = app

@@ -10,10 +10,10 @@
   <title>Signin Template for Bootstrap</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="/bootstrap-4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://getbootstrap.com/dist/css/bootstrap.min.css">
 
   <!-- Custom styles for this template -->
-  <link href="/bootstrap-4.0.0-beta.2/examples/signin/signin.css" rel="stylesheet">
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet">
 </head>
 
 <body>
@@ -21,6 +21,8 @@
   <div class="container">
 
     <form class="form-signin" method="post" action="/admin/auth">
+      <input type="hidden" name="remote_ip" value="<%= sRemoteIP %>">
+      <input type="hidden" name="md5_hash">
       <h2 class="form-signin-heading">Please sign in</h2>
       <label for="adminId" class="sr-only">Admin Id</label>
       <input type="text" name="admin_id" id="adminId" class="form-control" placeholder="Admin Id" required autofocus>
@@ -35,6 +37,19 @@
 		-->
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
+
+    <script src="/JavaScript-MD5-2.10.0/js/md5.min.js"></script>
+    <script>
+      window.onload = function () {
+        document.getElementsByClassName('form-signin')[0].onsubmit = function () {
+          this.md5_hash.value = md5(this.remote_ip.value + md5(this.admin_id.value + md5(this.passwd.value)))
+          this.remote_ip.value = ''
+          this.passwd.value = ''
+
+          return true
+        }
+      }
+    </script>
 
   </div>
   <!-- /container -->

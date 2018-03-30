@@ -13,13 +13,17 @@ let aws = require('aws-sdk')
 
 express.request.sIP = extended.sIP
 
+express.response.releaseRedirect = extended.releaseRedirect
+express.response.releaseRender = extended.releaseRender
+express.response.releaseSend = extended.releaseSend
+
 express.response.closeRedirect = extended.closeRedirect
 express.response.closeRender = extended.closeRender
 express.response.closeSend = extended.closeSend
 
 let app = express()
 app.disable('x-powered-by')
-app.set('trust proxy', ['loopback', 'linklocal', 'uniquelocal'])
+app.set('trust proxy', 'loopback, linklocal, uniquelocal')
 
 app.set('cfg', cfg)
 

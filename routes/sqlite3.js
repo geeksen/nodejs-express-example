@@ -1,4 +1,4 @@
-﻿
+
 'use strict'
 
 let express = require('express')
@@ -13,6 +13,8 @@ router.get('/show_databases', function (req, res, next) {
   }
 
   fs.readdir('./sqlite3', function (err, aFiles) {
+    if (err) { return res.send(err) }
+
     let aDatabases = []
 
     let aFilenameSplit = []
@@ -80,7 +82,7 @@ router.get('/show_tables', function (req, res, next) {
   let db = new sqlite3.Database(['./sqlite3/', req.query.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
-      
+
       db.run('PRAGMA journal_mode = PERSIST',
         function (err) {
           if (err) { return res.closeSend(db, err) }
@@ -176,7 +178,7 @@ router.post('/create_table', function (req, res, next) {
       return ''
     }
   }
-  
+
   let db = new sqlite3.Database(['./sqlite3/', req.body.database, '.db'].join(''),
     function (err) {
       if (err) { return res.send(err) }
@@ -365,7 +367,7 @@ router.post('/execute', function (req, res, next) {
           db.all('PRAGMA table_info(' + req.body.table + ')',
             function (err, aColumns) {
               if (err) { return res.closeSend(db, err) }
-              
+
               let aInsertColumns = []
               let aParams = []
               let aValues = []

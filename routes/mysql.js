@@ -163,7 +163,7 @@ router.post('/create_table', function (req, res, next) {
   if (req.body.name.length !== req.body.auto_increment.length) {
     return res.render('message', { message: 'number of auto_increments is not matched' })
   }
-  
+
   let getDefaultValue = function (sType, sAutoIncrement) {
     if (sType.indexOf('int(') > -1) {
       if (sAutoIncrement === 'AUTO_INCREMENT') {
@@ -387,7 +387,7 @@ router.get('/select_limit', function (req, res, next) {
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, aColumns, aFields) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
-          
+
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` LIMIT ?, ?', [parseInt(req.query.offset), parseInt(req.query.row_count)],
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }
@@ -418,7 +418,7 @@ router.get('/select_where', function (req, res, next) {
       dbConnShard.query('DESC `' + req.query.database + '`.`' + req.query.table + '`',
         function (err, aColumns, aFields) {
           if (err) { return res.releaseSend(dbConnShard, err.message) }
-          
+
           dbConnShard.query('SELECT * FROM `' + req.query.database + '`.`' + req.query.table + '` WHERE `' + req.query.key + '` = ? LIMIT 0, 1', [req.query.value],
             function (err, aRows, aFields) {
               if (err) { return res.releaseSend(dbConnShard, err.message) }

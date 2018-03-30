@@ -53,11 +53,9 @@ function onError (error) {
     case 'EACCES':
       console.error(sBind + ' requires elevated privileges')
       process.exit(1)
-      break
     case 'EADDRINUSE':
       console.error(sBind + ' is already in use')
       process.exit(1)
-      break
     default:
       throw error
   }

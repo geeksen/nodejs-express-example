@@ -95,8 +95,8 @@ app.set('rd001', rd001)
 */
 
 aws.config.update({
-    region: cfg.aws.region_name,
-    endpoint: cfg.dynamodb.endpoint_url
+  region: cfg.aws.region_name,
+  endpoint: cfg.dynamodb.endpoint_url
 })
 
 let ddbTable = new aws.DynamoDB()

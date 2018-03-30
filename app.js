@@ -7,7 +7,6 @@ let extended = require('./libs/extended')
 let express = require('express')
 let path = require('path')
 let logger = require('morgan')
-let cookieParser = require('cookie-parser')
 let cookieSession = require('cookie-session')
 let bodyParser = require('body-parser')
 let aws = require('aws-sdk')
@@ -56,7 +55,6 @@ app.set('ddbItem', ddbItem)
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']

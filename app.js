@@ -69,10 +69,6 @@ app.use('/', require('./routes/index'))
 app.use('/admin', require('./routes/admin'))
 app.use('/mysql', require('./routes/mysql'))
 app.use('/sqlite3', require('./routes/sqlite3'))
-app.use('/board', require('./routes/board'))
-app.use('/calendar', require('./routes/calendar'))
-// app.use('/photo', require('./routes/photo'))
-// app.use('/video', require('./routes/video'))
 
 app.use(extended.notFound) // catch 404 and forward to error handler
 app.use(extended.errorHandler) // error handler
